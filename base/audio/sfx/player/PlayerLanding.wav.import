@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/PlayerLanding.wav-58980bb9ff6a0925fc3e2334c0c078b2.sample"
+
+[deps]
+
+source_file="res://base/audio/sfx/player/PlayerLanding.wav"
+dest_files=[ "res://.import/PlayerLanding.wav-58980bb9ff6a0925fc3e2334c0c078b2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

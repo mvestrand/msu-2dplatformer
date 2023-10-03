@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/KeyPickup.wav-7da5d0b42c766be9eb95e00fe8ae7912.sample"
+
+[deps]
+
+source_file="res://base/audio/sfx/pickups/KeyPickup.wav"
+dest_files=[ "res://.import/KeyPickup.wav-7da5d0b42c766be9eb95e00fe8ae7912.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

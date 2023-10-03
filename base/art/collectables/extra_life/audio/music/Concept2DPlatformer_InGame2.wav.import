@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Concept2DPlatformer_InGame2.wav-adb9ed6a2d9abe94aba3a2ef2324d690.sample"
+
+[deps]
+
+source_file="res://base/art/collectables/extra_life/audio/music/Concept2DPlatformer_InGame2.wav"
+dest_files=[ "res://.import/Concept2DPlatformer_InGame2.wav-adb9ed6a2d9abe94aba3a2ef2324d690.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
