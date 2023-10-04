@@ -15,7 +15,8 @@ public partial class PlayerController : KinematicBody2D {
 	//public GroundCheck groundCheck = null;
 	[Export] public NodePath spritePath;
 	public AnimatedSprite sprite;
-	[Export] public float health = 10;
+	[Export] public NodePath healthPath;
+    public Health health;
 	//[Export] public Health playerHealth;
 
 	// Which way the player is facing right now
@@ -45,7 +46,7 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] public float jumpDuration = 0.1f;
 	[Export] public PackedScene jumpEffect = null;
 	[Export] public PackedScene landEffect = null;
-
+    [Export(PropertyHint.Layers2dPhysics)] public uint passThroughLayers;
 
 	// [Export] public List<string> passThroughLayers = new List<string>();
 
@@ -63,10 +64,12 @@ public partial class PlayerController : KinematicBody2D {
 	private bool jumpHeld = false;
 	private bool jumpPressed = false;
 	private void UpdateInputs() {
+        if (!health.IsAlive())
+            return;
 		moveInput.x = Input.GetAxis("p1_move_left", "p1_move_right");
 		moveInput.y = Input.GetAxis("p1_move_up", "p1_move_down");
 		jumpPressed = Input.IsActionJustPressed("p1_jump");
-		jumpHeld = Input.IsActionPressed("p1_jump");
+		jumpHeld = Input.IsActionPressed("p1_jump");        
 	}
 
 	public enum PlayerState {
@@ -82,6 +85,7 @@ public partial class PlayerController : KinematicBody2D {
 
 	public override void _Ready() {
 		sprite = GetNode<AnimatedSprite>(spritePath);
+        health = GetNode<Health>(healthPath);
 	}
 
 	/// <summary>
@@ -141,33 +145,13 @@ public partial class PlayerController : KinematicBody2D {
         if (!IsOnFloor()) {
         	Velocity.y = Mathf.Min(Velocity.y + gravity * delta, maxFallSpeed);
         }
+        // Update passthrough layers
+        if (moveInput.y > 0.5) {
+            CollisionMask &= ~passThroughLayers;
+        } else {
+            CollisionMask |= passThroughLayers;
+        }
 	}
-
-	/// <summary>
-	/// Description:
-	/// Moves the player with a specified force
-	/// Input: 
-	/// Vector2 movementForce
-	/// Return: 
-	/// void (no return)
-	/// </summary>
-	/// <param name="movementForce">The force with which to move the player</param>
-	// private void UpdateVelocity(Vector2 movementForce) {
-	// 	if (IsOnFloor() && !Jumping) {
-	// 		Velocity = new Vector2(movementForce.x, 0);
-	// 	} else {
-	// 		Velocity = new Vector2(movementForce.x, Velocity.y);
-	// 	}
-	// 	// if (Velocity.y > 0) {
-	// 	// 	foreach (string layerName in passThroughLayers) {
-	// 	// 		Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), true);
-	// 	// 	}
-	// 	// } else {
-	// 	// 	foreach (string layerName in passThroughLayers) {
-	// 	// 		Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer(layerName), false);
-	// 	// 	}
-	// 	// }
-	// }
 
 	/// <summary>
 	/// Description:
@@ -285,7 +269,7 @@ public partial class PlayerController : KinematicBody2D {
 	/// void (no return)
 	/// </summary>
 	private void DetermineState() {
-		if (health <= 0) {
+		if (!health.IsAlive()) {
 			SetState(PlayerState.Dead);
 		} else if (IsOnFloor()) {
 			if (Mathf.Abs(Velocity.x) > 0.1) {

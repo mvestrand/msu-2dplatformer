@@ -1,15 +1,16 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://base/art/player/Player Sprites.png" type="Texture" id=1]
 [ext_resource path="res://base/scripts/PlayerController.cs" type="Script" id=2]
 [ext_resource path="res://base/scenes/effects/PlayerJumpFX.tscn" type="PackedScene" id=3]
 [ext_resource path="res://base/scenes/effects/PlayerLandFX.tscn" type="PackedScene" id=4]
+[ext_resource path="res://base/scripts/Health.cs" type="Script" id=5]
+[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=6]
+[ext_resource path="res://base/scenes/effects/PlayerHurtFX.tscn" type="PackedScene" id=7]
+[ext_resource path="res://base/scenes/effects/PlayerDieFX.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 10 )
-
-[sub_resource type="RayShape2D" id=24]
-length = 9.0
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
@@ -118,25 +119,23 @@ animations = [ {
 "speed": 12.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=24]
+extents = Vector2( 8, 1 )
+
 [node name="KinematicBody2D" type="KinematicBody2D"]
+collision_layer = 5
 script = ExtResource( 2 )
 spritePath = NodePath("AnimatedSprite")
+healthPath = NodePath("Health")
 moveSpeed = 100.0
 jumpPower = 400.0
 allowedJumps = 2
 jumpEffect = ExtResource( 3 )
 landEffect = ExtResource( 4 )
+passThroughLayers = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
-
-[node name="WallSlideL" type="CollisionShape2D" parent="."]
-rotation = 1.5708
-shape = SubResource( 24 )
-
-[node name="WallSlideR" type="CollisionShape2D" parent="."]
-rotation = -1.5708
-shape = SubResource( 24 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 23 )
@@ -144,7 +143,24 @@ animation = "idle"
 centered = false
 offset = Vector2( -16, -22 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource( 5 )
+_maxHp = 5
+_hp = 5
+ignoreOnInvincible = true
+deathEffect = ExtResource( 8 )
+hitEffect = ExtResource( 7 )
+useLives = true
+
+[node name="Killbox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+monitorable = false
+script = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killbox"]
+position = Vector2( 0, 11 )
+shape = SubResource( 24 )
+disabled = true

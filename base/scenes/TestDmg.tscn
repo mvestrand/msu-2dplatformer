@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=1]
+[ext_resource path="res://base/art/enemies/flying/Old_Egg_Droid.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[node name="TestDmg" type="Node2D"]
+position = Vector2( -16, -14 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 327, 9, 26, 29 )
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+monitorable = false
+script = ExtResource( 1 )
+teamId = 1
+destroyAfterDamage = true
+dealDamageOnEnter = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )

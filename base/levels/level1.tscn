@@ -1,13 +1,20 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://base/scenes/StaticPlatform.tscn" type="PackedScene" id=3]
+[ext_resource path="res://base/scenes/MovingPlatform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://base/tilesets/platforms.tres" type="TileSet" id=5]
+[ext_resource path="res://base/scenes/TestDmg.tscn" type="PackedScene" id=6]
 
 [node name="Level1" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( -80, -16 )
 moveSpeed = 200.0
+
+[node name="StaticPlatform" parent="." instance=ExtResource( 3 )]
+position = Vector2( 48, -64 )
 
 [node name="Fore1" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
@@ -36,3 +43,19 @@ format = 1
 [node name="ForeDetail" type="TileMap" parent="."]
 z_index = 5
 format = 1
+
+[node name="MovingPlatform" parent="." instance=ExtResource( 4 )]
+position = Vector2( 240, 0 )
+
+[node name="Platforms" type="TileMap" parent="."]
+tile_set = ExtResource( 5 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
+collision_layer = 2
+collision_mask = 0
+format = 1
+
+[node name="TestDmg" parent="." instance=ExtResource( 6 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true

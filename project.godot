@@ -66,6 +66,13 @@ p1_jump={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="terrain"
+2d_physics/layer_2="passthrough"
+2d_physics/layer_3="hitbox"
+2d_physics/layer_4="dmgbox"
+
 [mono]
 
 project/assembly_name="MSU_2DPlatformer"
