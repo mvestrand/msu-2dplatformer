@@ -122,8 +122,9 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=24]
 extents = Vector2( 8, 1 )
 
-[node name="KinematicBody2D" type="KinematicBody2D"]
+[node name="KinematicBody2D" type="KinematicBody2D" groups=["player"]]
 collision_layer = 5
+collision_mask = 17
 script = ExtResource( 2 )
 spritePath = NodePath("AnimatedSprite")
 healthPath = NodePath("Health")

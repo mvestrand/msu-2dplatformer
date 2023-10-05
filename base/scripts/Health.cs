@@ -66,6 +66,7 @@ public partial class Health : Node, IHealth {
 	[Export] public int maximumLives = 5;
 	[Export] public float respawnDelay = 3f;
     [Export] public bool infiniteRespawns = false;
+    [Export] public Vector2 respawnOffset = Vector2.Zero;
 
 
 
@@ -82,9 +83,9 @@ public partial class Health : Node, IHealth {
 	/// void (no return)
 	/// </summary>
 	public override void _Ready() {
-        // var parent = GetParent<Node2D>();
-        // if (parent != null)
-		//     SetRespawnPoint(parent.GlobalPosition);
+        var parent = GetParent<Node2D>();
+        if (parent != null)
+		    SetRespawnPoint(parent.GlobalPosition);
 	}
 
 	/// <summary>
@@ -158,7 +159,7 @@ public partial class Health : Node, IHealth {
 	/// </summary>
 	void Respawn() {
         var parent = GetParent<Node2D>();
-        parent.GlobalPosition = respawnPosition;
+        parent.GlobalPosition = respawnPosition + respawnOffset;
 		Hp = MaxHp;
         respawnDelayLeft = 0;
         invincibleTimeLeft = invincibleTimeOnHit;
