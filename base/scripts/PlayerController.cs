@@ -16,6 +16,7 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] public NodePath spritePath;
 	public AnimatedSprite sprite;
 	[Export] public NodePath healthPath;
+    [Export] public NodePath killboxPath;
     public Health health;
 	//[Export] public Health playerHealth;
 
@@ -86,6 +87,8 @@ public partial class PlayerController : KinematicBody2D {
 	public override void _Ready() {
 		sprite = GetNode<AnimatedSprite>(spritePath);
         health = GetNode<Health>(healthPath);
+        //Connect("DamageDealt", GetNode(killboxPath), nameof(Bounce));
+
 	}
 
 	/// <summary>
@@ -201,7 +204,7 @@ public partial class PlayerController : KinematicBody2D {
 	private void SpawnEffect(PackedScene effect) {
 		if (effect != null) {
 			var inst = effect.Instance<Node2D>();
-			GetTree().Root.AddChild(inst);
+			GetViewport().AddChild(inst);
 			inst.GlobalPosition = GlobalPosition;
 		}
 	}

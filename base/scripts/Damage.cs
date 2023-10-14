@@ -10,14 +10,25 @@ public partial class Damage : Area2D {
 
 	[Export] public int damageAmount = 1;
 	[Export] public bool destroyAfterDamage = false;
-    [Export] public bool dealDamageOnEnter = false;
+    [Export] public bool dealDamageOnEnter = true;
 	[Export] public bool dealDamageOnStay = false;
+
+    [Signal] public delegate void DamageDealt(Node target, TakeDamageOutcome outcome);
+
 
     public override void _Ready() {
         if (dealDamageOnEnter) {
             Connect("area_entered", this, nameof(_on_area_entered));
             Connect("body_entered", this, nameof(_on_body_entered));
         }
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        if (dealDamageOnStay) {
+            HitArea();
+        }
+
     }
 
     public void HitArea() {
@@ -60,6 +71,10 @@ public partial class Damage : Area2D {
 	private void DealDamage(IHealth target) {
 		if (target.TeamId != teamId) {
             var outcome = target.TakeDamage(damageAmount);
+            if (outcome != TakeDamageOutcome.Ignored) {
+                GD.Print("dmg dealt");
+                EmitSignal(nameof(DamageDealt), target as Node, outcome);
+            }
             if (outcome != TakeDamageOutcome.Ignored && destroyAfterDamage) {
                 Owner.QueueFree();
             }

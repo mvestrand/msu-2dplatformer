@@ -181,6 +181,7 @@ public partial class Health : Node, IHealth {
         if (!IsAlive())
 			return ignoreOnDead ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
         Hp = Mathf.Max(Hp - amount, 0);
+        invincibleTimeLeft = invincibleTimeOnHit;
         EmitSignal(nameof(Damaged), amount);
         if (!IsAlive()) {
             GD.Print("die");
@@ -208,7 +209,7 @@ public partial class Health : Node, IHealth {
             return;
         var parent = GetParent<Node2D>();
         var inst = effect.Instance<Node2D>();
-		GetTree().Root.AddChild(inst);
+		GetViewport().AddChild(inst);
 		inst.GlobalPosition = parent.GlobalPosition;
         inst.GlobalRotation = parent.GlobalRotation;
     }

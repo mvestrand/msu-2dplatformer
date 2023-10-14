@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://base/levels/level1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://base/shaders/GameWindow.gdshader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 2 )
+shader_param/cam_offset = Vector2( 0, 0 )
+
+[node name="GameWindow" type="Control"]
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+material = SubResource( 2 )
+margin_left = -8.0
+margin_top = -8.0
+margin_right = 154.0
+margin_bottom = 84.0
+rect_scale = Vector2( 8, 8 )
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 162, 92 )
+handle_input_locally = false
+usage = 1
+render_target_update_mode = 3
+audio_listener_enable_2d = true
+
+[node name="Level1" parent="ViewportContainer/Viewport" instance=ExtResource( 1 )]

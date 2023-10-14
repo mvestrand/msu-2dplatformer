@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/HelmetDarkOutline.png-37b26645e8b8bafd29d0d1396ec8524f.stex"
+path="res://.import/Stars_C.png-02844caae60b6445d049437b3159c4f4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://base/art/collectables/extra_life/HelmetDarkOutline.png"
-dest_files=[ "res://.import/HelmetDarkOutline.png-37b26645e8b8bafd29d0d1396ec8524f.stex" ]
+source_file="res://base/art/environment/background/stars/Stars_C.png"
+dest_files=[ "res://.import/Stars_C.png-02844caae60b6445d049437b3159c4f4.stex" ]
 
 [params]
 
@@ -19,7 +19,7 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
+flags/repeat=0
 flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false

@@ -19,7 +19,7 @@ collision_mask = 4
 monitorable = false
 script = ExtResource( 1 )
 teamId = 1
-damageAmount = 10
+damageAmount = 2
 destroyAfterDamage = true
 dealDamageOnEnter = true
 
