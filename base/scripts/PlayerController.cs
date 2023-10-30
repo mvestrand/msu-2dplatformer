@@ -16,8 +16,8 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] public NodePath spritePath;
 	public AnimatedSprite sprite;
 	[Export] public NodePath healthPath;
-    [Export] public NodePath killboxPath;
-    public Health health;
+	[Export] public NodePath killboxPath;
+	public Health health;
 	//[Export] public Health playerHealth;
 
 	// Which way the player is facing right now
@@ -35,19 +35,20 @@ public partial class PlayerController : KinematicBody2D {
 		}
 	}
 
-    [Export] public float gravity = (int)ProjectSettings.GetSetting("physics/2d/default_gravity");
+	[Export] public float gravity = (int)ProjectSettings.GetSetting("physics/2d/default_gravity");
 	[Export] public float moveSpeed = 300.0f;
+	[Export] public float moveAccel = 0;
 	[Export] public float jumpPower = 500.0f;
 	[Export] public float maxFallSpeed = 1000f;
 	[Export] public float groundFriction = 500;
 	[Export] public float airFriction = 20;
-	// [Export] public float coyoteTime = 0.2f;
-	// [Export] public bool freeGroundJumps = true;
+	[Export] public float coyoteTime = 0.2f;
+	[Export] public bool freeGroundJumps = true;
 	[Export] public int allowedJumps = 1;
 	[Export] public float jumpDuration = 0.1f;
 	[Export] public PackedScene jumpEffect = null;
 	[Export] public PackedScene landEffect = null;
-    [Export(PropertyHint.Layers2dPhysics)] public uint passThroughLayers;
+	[Export(PropertyHint.Layers2dPhysics)] public uint passThroughLayers;
 
 	// [Export] public List<string> passThroughLayers = new List<string>();
 
@@ -65,12 +66,12 @@ public partial class PlayerController : KinematicBody2D {
 	private bool jumpHeld = false;
 	private bool jumpPressed = false;
 	private void UpdateInputs() {
-        if (!health.IsAlive())
-            return;
+		if (!health.IsAlive())
+			return;
 		moveInput.x = Input.GetAxis("p1_move_left", "p1_move_right");
 		moveInput.y = Input.GetAxis("p1_move_up", "p1_move_down");
 		jumpPressed = Input.IsActionJustPressed("p1_jump");
-		jumpHeld = Input.IsActionPressed("p1_jump");        
+		jumpHeld = Input.IsActionPressed("p1_jump");
 	}
 
 	public enum PlayerState {
@@ -86,10 +87,30 @@ public partial class PlayerController : KinematicBody2D {
 
 	public override void _Ready() {
 		sprite = GetNode<AnimatedSprite>(spritePath);
-        health = GetNode<Health>(healthPath);
-        //Connect("DamageDealt", GetNode(killboxPath), nameof(Bounce));
+		health = GetNode<Health>(healthPath);
+		//Connect("DamageDealt", GetNode(killboxPath), nameof(Bounce));
 
 	}
+
+#if DEBUG
+	private void HandleDebugInputs() {
+		bool nextCP = Input.IsActionJustPressed("debug_next_cp");
+		bool prevCP = Input.IsActionJustPressed("debug_prev_cp");
+		bool respawnPressed = Input.IsActionJustPressed("debug_respawn");
+
+		if (nextCP) {
+			health.SetNextRespawn();
+		} else if (prevCP) {
+			health.SetPrevRespawn();
+		}
+
+		if (nextCP || prevCP || respawnPressed)
+			health.Respawn();
+	}
+
+
+#endif
+
 
 	/// <summary>
 	/// Description:
@@ -105,65 +126,68 @@ public partial class PlayerController : KinematicBody2D {
 		UpdateInputs();
 		HandleMovementInput(delta);
 		HandleJump(delta);
-		UpdateSpriteDirection();
-        if (IsOnFloor() && !Jumping)
-    		Velocity = MoveAndSlideWithSnap(Velocity, Vector2.Down*10, Vector2.Up, true);
-        else {
-    		Velocity = MoveAndSlide(Velocity, Vector2.Up, true);
-        }
+		//UpdateSpriteDirection();
+		if (IsOnFloor() && !Jumping)
+			Velocity = MoveAndSlideWithSnap(Velocity, Vector2.Down * 10, Vector2.Up, true);
+		else {
+			Velocity = MoveAndSlide(Velocity, Vector2.Up, true);
+		}
 		LandingCheck();
 		DetermineState();
+#if DEBUG
+		HandleDebugInputs();
+#endif
 	}
 
 	private float LandEffectMinSpeed = 5;
 	private float fallSpeed = 0;
 	private void LandingCheck() {
-        if (IsOnFloor()) {
-            if (fallSpeed > LandEffectMinSpeed) {
+		if (IsOnFloor()) {
+			if (fallSpeed > LandEffectMinSpeed) {
 				SpawnEffect(landEffect);
 			}
 			fallSpeed = 0;
 		} else {
-    		fallSpeed = Velocity.y;
-        }
+			fallSpeed = Velocity.y;
+		}
 	}
 
-	/// <summary>
-	/// Description:
-	/// Handles movement input
-	/// Input: none
-	/// Return: void (no return)
-	/// </summary>
-	private void HandleMovementInput(float delta) {        
-        // Horizontal movement        
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="delta"></param>
+	private void HandleMovementInput(float delta) {
+		// Horizontal movement        
 		if (Mathf.Abs(moveInput.x) > 0 && state != PlayerState.Dead) {
 			Velocity.x = moveSpeed * moveInput.x;
 			sprite.FlipH = moveInput.x < 0;
-		} 
-        else { // Apply friction
-			float friction = IsOnFloor() ? groundFriction : airFriction;
-			Velocity.x = Mathf.Lerp(Velocity.x, 0, Mathf.Clamp(friction * delta, 0, 1));
+		} else { // Apply friction
+			ApplyFriction(delta);
 		}
-        // Apply gravity
-        if (!IsOnFloor()) {
-        	Velocity.y = Mathf.Min(Velocity.y + gravity * delta, maxFallSpeed);
-        }
-        // Update passthrough layers
-        if (moveInput.y > 0.5) {
-            CollisionMask &= ~passThroughLayers;
-        } else {
-            CollisionMask |= passThroughLayers;
-        }
+		// Apply gravity
+		if (!IsOnFloor()) {
+			Velocity.y = Mathf.Min(Velocity.y + gravity * delta, maxFallSpeed);
+		}
+		UpdatePassthrough();
 	}
 
-	/// <summary>
-	/// Description:
-	/// Handles jump input
-	/// Input:
-	/// none
-	/// Return:
-	/// void (no return)
-	/// </summary>
+	private void ApplyFriction(float delta) {
+		float friction = IsOnFloor() ? groundFriction : airFriction;
+		Velocity.x = Mathf.Lerp(Velocity.x, 0, Mathf.Clamp(friction * delta, 0, 1));
+	}
+
+	private void UpdatePassthrough() {
+		if (moveInput.y > 0.5) {
+			CollisionMask &= ~passThroughLayers;
+		} else {
+			CollisionMask |= passThroughLayers;
+		}
+	}
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="delta"></param>
 	private void HandleJump(float delta) {
 		if (Jumping) {
 			jumpTime -= delta;
@@ -185,7 +209,7 @@ public partial class PlayerController : KinematicBody2D {
 	/// <returns>IEnumerator: makes coroutine possible</returns>
 	private void Jump(float powerMultiplier = 1.0f) {
 		if (timesJumped < allowedJumps && state != PlayerState.Dead) {
-			float new_y =  -jumpPower * powerMultiplier;
+			float new_y = -jumpPower * powerMultiplier;
 			jumpTime = jumpDuration;
 			SpawnEffect(jumpEffect);
 			Velocity.y = new_y;
@@ -234,15 +258,15 @@ public partial class PlayerController : KinematicBody2D {
 	/// Return: 
 	/// void (no return)
 	/// </summary>
-	private void UpdateSpriteDirection() {
-		if (sprite != null) {
-			if (Facing == Facing2D.Left) {
-				sprite.FlipH = true;
-			} else {
-				sprite.FlipH = false;
-			}
-		}
-	}
+	// private void UpdateSpriteDirection() {
+	// 	if (sprite != null) {
+	// 		if (Facing == Facing2D.Left) {
+	// 			sprite.FlipH = true;
+	// 		} else {
+	// 			sprite.FlipH = false;
+	// 		}
+	// 	}
+	// }
 
 	/// <summary>
 	/// Description:
@@ -256,7 +280,7 @@ public partial class PlayerController : KinematicBody2D {
 	private void SetState(PlayerState newState) {
 		var oldState = state;
 		state = newState;
-        if (oldState != newState  || forcePlayAnim) {
+		if (oldState != newState || forcePlayAnim) {
 
 			PlayStateAnimation();
 			forcePlayAnim = false;
@@ -292,24 +316,24 @@ public partial class PlayerController : KinematicBody2D {
 		}
 	}
 
-    private void PlayStateAnimation() {
-        switch (state) {
-            case PlayerState.Idle:
+	private void PlayStateAnimation() {
+		switch (state) {
+			case PlayerState.Idle:
 				sprite.Play("idle");
 				break;
-            case PlayerState.Walk:
+			case PlayerState.Walk:
 				sprite.Play("walk");
 				break;
-            case PlayerState.Jump:
+			case PlayerState.Jump:
 				sprite.Play("jump");
 				break;
-            case PlayerState.Dead:
+			case PlayerState.Dead:
 				sprite.Play("dead");
 				break;
-            case PlayerState.Fall:
+			case PlayerState.Fall:
 				sprite.Play("jump");
 				break;
 		}
-    }
+	}
 
 }

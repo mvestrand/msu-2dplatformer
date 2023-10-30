@@ -3,14 +3,14 @@ using System;
 
 public partial class ScorePickup : Pickup {
 
-    protected override bool TryToPickup(Node taker) {
-        if (taker != null && taker.IsInGroup("player")) {
+	protected override bool TryToPickup(Node taker) {
+		if (taker != null && taker.IsInGroup("player")) {
 
-            // ADD SCORE HERE
+			// ADD SCORE HERE
 
-            return true;
-        }
-        return false;
-    }
+			return true;
+		}
+		return false;
+	}
 
 }

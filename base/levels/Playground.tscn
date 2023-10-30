@@ -1,0 +1,154 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
+[ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://base/scenes/Checkpoint.tscn" type="PackedScene" id=3]
+[ext_resource path="res://base/art/collectables/score/Score_Big.png" type="Texture" id=4]
+[ext_resource path="res://base/tilesets/platforms.tres" type="TileSet" id=5]
+[ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.12311
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 4 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 4 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 4 )
+region = Rect2( 128, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=7]
+animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 15.0
+
+[node name="Level1" type="Node2D"]
+__meta__ = {
+"_edit_horizontal_guides_": [  ]
+}
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( -72, -16 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.5, 0.5 )
+process_mode = 0
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
+smoothing_speed = 10.0
+script = ExtResource( 7 )
+targetPath = NodePath("../Player")
+cameraMovementStyle = 1
+maxDistanceFromTarget = 200.0
+
+[node name="Env" type="Node2D" parent="."]
+
+[node name="Tiles" type="Node2D" parent="Env"]
+
+[node name="Fore1" type="TileMap" parent="Env/Tiles"]
+z_index = 3
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
+format = 1
+tile_data = PoolIntArray( 65517, 0, 196608, 65518, 0, 196609, 65519, 0, 196610, 65521, 0, 196608, 65522, 0, 196609, 65523, 0, 196610, 65526, 0, 196608, 65527, 0, 196609, 65528, 0, 196610, 65532, 0, 196608, 65533, 0, 196609, 65534, 0, 196610, 3, 0, 196608, 4, 0, 196609, 5, 0, 196610, 11, 0, 196608, 12, 0, 196609, 13, 0, 196610, 20, 0, 196608, 21, 0, 196609, 22, 0, 196610 )
+
+[node name="Back1" type="TileMap" parent="Env/Tiles"]
+modulate = Color( 0.588235, 0.588235, 0.588235, 1 )
+z_index = -10
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
+collision_layer = 0
+collision_mask = 0
+format = 1
+
+[node name="Acid" type="TileMap" parent="Env/Tiles"]
+z_index = 2
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
+format = 1
+
+[node name="ForeDetail" type="TileMap" parent="Env/Tiles"]
+z_index = 5
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
+format = 1
+
+[node name="Platforms" type="TileMap" parent="Env/Tiles"]
+z_index = 1
+tile_set = ExtResource( 5 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
+collision_layer = 2
+collision_mask = 0
+format = 1
+
+[node name="Score" type="Node2D" parent="Env"]
+
+[node name="Dynamic" type="Node2D" parent="Env"]
+
+[node name="Checkpoints" type="Node2D" parent="Env"]
+
+[node name="Checkpoint" parent="Env/Checkpoints" instance=ExtResource( 3 )]
+position = Vector2( -64, 0 )
+
+[node name="Checkpoint2" parent="Env/Checkpoints" instance=ExtResource( 3 )]
+position = Vector2( 400, 0 )
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Anchor" type="StaticBody2D" parent="."]
+position = Vector2( -112, -94 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor"]
+shape = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Anchor"]
+frames = SubResource( 7 )
+frame = 1
+playing = true
+offset = Vector2( 0, -1 )
+
+[node name="Pendulum" type="RigidBody2D" parent="."]
+position = Vector2( -161, -59 )
+mode = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pendulum"]
+shape = SubResource( 8 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Pendulum"]
+scale = Vector2( 4, 4 )
+frames = SubResource( 7 )
+playing = true
+offset = Vector2( 0, -1 )
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2( -72, -16 )
+rotation = -4.26384
+node_a = NodePath("../Player")
+node_b = NodePath("../Pendulum")
+length = 99.0
+rest_length = 1.0

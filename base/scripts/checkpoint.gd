@@ -4,6 +4,7 @@ extends Area2D
 # var a = 2
 # var b = "text"
 
+
 var active: bool = false;
 
 # Called when the node enters the scene tree for the first time.
@@ -14,14 +15,24 @@ func _ready():
 #func _process(delta):
 #	pass
 
-
-func _on_Checkpoint_body_entered(body: Node):
+func SetRespawnPoint(body: Node) -> bool:
 	if body.is_in_group("player"):
 		var health := body.get_node("Health")
 		if !health: # Guard against misnamed Health component
-			return
+			return false
+		health.SetRespawnNode(self)
+		return true
+	return false
+
+func Activate() -> void:
+	if not active:
+		active = true
+		$AnimationPlayer.play("activate")
+
+
+func _on_Checkpoint_body_entered(body: Node):
+	if body.is_in_group("player"):
 		if not active: # Only activate on first player contact
-			$AnimationPlayer.play("activate")
-			active = true
-			health.respawnPosition = global_position
-		
+			if SetRespawnPoint(body):
+				Activate()
+

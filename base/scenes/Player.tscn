@@ -54,6 +54,7 @@ ignoreOnInvincible = true
 deathEffect = ExtResource( 8 )
 hitEffect = ExtResource( 7 )
 useLives = true
+respawnOffset = Vector2( 0, -22 )
 
 [node name="PickupZone" type="Area2D" parent="."]
 modulate = Color( 1, 0.964706, 0.0627451, 1 )

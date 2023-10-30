@@ -1,0 +1,59 @@
+{
+  "settings": {
+    "show_details_preview": true
+  },
+  "categories": [
+    {
+      "title": "Task",
+      "color": "6495ed"
+    },
+    {
+      "title": "Improvement",
+      "color": "91d781"
+    },
+    {
+      "title": "Bug",
+      "color": "cb4f4f"
+    }
+  ],
+  "columns": [
+    {
+      "stages": [
+        0
+      ]
+    },
+    {
+      "stages": [
+        1
+      ]
+    },
+    {
+      "stages": [
+        2
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "title": "Todo",
+      "tasks": [
+
+      ]
+    },
+    {
+      "title": "Doing",
+      "tasks": [
+
+      ]
+    },
+    {
+      "title": "Done",
+      "tasks": [
+
+      ]
+    }
+  ],
+  "tasks": [
+
+  ]
+}

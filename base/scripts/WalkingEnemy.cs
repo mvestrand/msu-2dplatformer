@@ -9,18 +9,18 @@ public class WalkingEnemy : EnemyBase {
 	/// </summary>
 	public enum WalkDirections { Right, Left, None }
 
-    [Export] public NodePath leftEdgePath;
-    public RayCast2D leftEdgeTest;
-    [Export] public NodePath rightEdgePath;
-    public RayCast2D rightEdgeTest;
+	[Export] public NodePath leftEdgePath;
+	public RayCast2D leftEdgeTest;
+	[Export] public NodePath rightEdgePath;
+	public RayCast2D rightEdgeTest;
 
 	[Export] public WalkDirections walkDirection = WalkDirections.None;
 	[Export] public bool willTurnAroundAtEdge = false;
 
-    // The sprite renderer for this enemy
-    //private SpriteRenderer spriteRenderer = null;
-    // private AnimatedSprite sprite;
-    // private AnimationPlayer animator;
+	// The sprite renderer for this enemy
+	//private SpriteRenderer spriteRenderer = null;
+	// private AnimatedSprite sprite;
+	// private AnimationPlayer animator;
 
 	/// <summary>
 	/// Description:
@@ -31,24 +31,24 @@ public class WalkingEnemy : EnemyBase {
 	/// void (no return)
 	/// </summary>
 	public override void _Ready() {
-        //sprite = GetNode<AnimatedSprite>("AnimatedSprite");
-        leftEdgeTest = GetNode<RayCast2D>(leftEdgePath);
-        rightEdgeTest = GetNode<RayCast2D>(rightEdgePath);        
+		//sprite = GetNode<AnimatedSprite>("AnimatedSprite");
+		leftEdgeTest = GetNode<RayCast2D>(leftEdgePath);
+		rightEdgeTest = GetNode<RayCast2D>(rightEdgePath);
 	}
 
-    /// <summary>
-    /// Description:
-    /// Override of EnemyBase.GetMovement
-    /// Moves in a direction until a wall is hit, then switches direction
-    /// Input: 
-    /// none
-    /// Return: 
-    /// Vector3
-    /// </summary>
-    /// <returns>Vector3: The movement for this frame</returns>
-    protected override Vector2 GetSteerVelocity(float delta) {
+	/// <summary>
+	/// Description:
+	/// Override of EnemyBase.GetMovement
+	/// Moves in a direction until a wall is hit, then switches direction
+	/// Input: 
+	/// none
+	/// Return: 
+	/// Vector3
+	/// </summary>
+	/// <returns>Vector3: The movement for this frame</returns>
+	protected override Vector2 GetSteerVelocity(float delta) {
 
-        DetermineWalkDirection();
+		DetermineWalkDirection();
 
 		// Determine the movement vector based on the direction that the enemy is currently moving in
 		switch (walkDirection) {
@@ -92,7 +92,7 @@ public class WalkingEnemy : EnemyBase {
 	/// void (no return)
 	/// </summary>
 	private void TurnAround() {
-        //GD.Print("turn");
+		//GD.Print("turn");
 		if (walkDirection == WalkDirections.Left) {
 			walkDirection = WalkDirections.Right;
 		} else if (walkDirection == WalkDirections.Right) {
@@ -142,9 +142,9 @@ public class WalkingEnemy : EnemyBase {
 			check = rightEdgeTest;
 		}
 		if (check != null) {
-            check.ForceRaycastUpdate();
-            if (!check.IsColliding())
-    			return willTurnAroundAtEdge;
+			check.ForceRaycastUpdate();
+			if (!check.IsColliding())
+				return willTurnAroundAtEdge;
 		}
 		return false;
 	}

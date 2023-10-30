@@ -85,7 +85,6 @@ walkDirection = 1
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 2 )
 animation = "idle"
-frame = 3
 centered = false
 offset = Vector2( -20, -40 )
 

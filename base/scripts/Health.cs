@@ -1,17 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using Godot;
 
 public interface IHealth {
-    int TeamId { get; }
-    int MaxHp { get; set; }
-    int Hp { get; set; }
-    bool IsInvincible();
-    bool IsAlive();
-    TakeDamageOutcome TakeDamage(int amount);
-    bool ReceiveHealing(int amount, int overheal = 0);
-    void Die();
+	int TeamId { get; }
+	int MaxHp { get; set; }
+	int Hp { get; set; }
+	bool IsInvincible();
+	bool IsAlive();
+	TakeDamageOutcome TakeDamage(int amount);
+	bool ReceiveHealing(int amount, int overheal = 0);
+	void Die();
+}
+
+public interface IRespawnPoint {
+	Vector2 GetRespawnPosition();
+	void OnRespawnUnset();
+	void OnRespawnSet();
 }
 
 // public interface ILives {
@@ -29,48 +36,48 @@ public enum TakeDamageOutcome { Ignored = 0, Blocked = 1, Received = 2, Killed =
 /// Implementation Notes: 2D Rigidbodies must be set to never sleep for this to interact with trigger stay damage
 /// </summary>
 public partial class Health : Node, IHealth {
-    [Export] public int teamId = 0;
-    public int TeamId { get { return teamId; } }
-    [Export] private int _maxHp = 1;
-    public int MaxHp { get { return _maxHp; } set { _maxHp = value; }} 
+	[Export] public int teamId = 0;
+	public int TeamId { get { return teamId; } }
+	[Export] private int _maxHp = 1;
+	public int MaxHp { get { return _maxHp; } set { _maxHp = value; } }
 	[Export] private int _hp = 1;
-    public int Hp { 
-        get { return _hp; } 
-        set { 
-            if (value != _hp) { 
-                var tmp = _hp; 
-                _hp = value;
-                EmitSignal(nameof(HealthChanged), tmp, _hp);
-            }
-        }
-    }
+	public int Hp {
+		get { return _hp; }
+		set {
+			if (value != _hp) {
+				var tmp = _hp;
+				_hp = value;
+				EmitSignal(nameof(HealthChanged), tmp, _hp);
+			}
+		}
+	}
 	[Export] public float invincibleTimeOnHit = 1f;
-    [Export] public bool invincibleAlways = false;
-    [Export] public bool ignoreOnInvincible = false;
-    [Export] public bool ignoreOnDead = true;
+	[Export] public bool invincibleAlways = false;
+	[Export] public bool ignoreOnInvincible = false;
+	[Export] public bool ignoreOnDead = true;
 
 	[Export] public PackedScene deathEffect;
 	[Export] public PackedScene hitEffect;
 
-    public bool IsAlive() { return _hp > 0; }
-    public bool IsInvincible() { return invincibleAlways || invincibleTimeLeft > 0; }
+	public bool IsAlive() { return _hp > 0; }
+	public bool IsInvincible() { return invincibleAlways || invincibleTimeLeft > 0; }
 
 
-    [Signal] public delegate void HealthChanged(float oldHp, float newHp);
-    [Signal] public delegate void Damaged(float amount);
-    [Signal] public delegate void Healed(float amount);
-    [Signal] public delegate void Died();
+	[Signal] public delegate void HealthChanged(float oldHp, float newHp);
+	[Signal] public delegate void Damaged(float amount);
+	[Signal] public delegate void Healed(float amount);
+	[Signal] public delegate void Died();
 
 	[Export] public bool useLives = false;
 	[Export] public int currentLives = 3;
 	[Export] public int maximumLives = 5;
 	[Export] public float respawnDelay = 3f;
-    [Export] public bool infiniteRespawns = false;
-    [Export] public Vector2 respawnOffset = Vector2.Zero;
+	[Export] public bool infiniteRespawns = false;
+	[Export] public Vector2 respawnOffset = Vector2.Zero;
 
 
 
-    private float invincibleTimeLeft = 0;
+	private float invincibleTimeLeft = 0;
 	private float respawnDelayLeft = 0;
 
 
@@ -83,9 +90,9 @@ public partial class Health : Node, IHealth {
 	/// void (no return)
 	/// </summary>
 	public override void _Ready() {
-        var parent = GetParent<Node2D>();
-        if (parent != null)
-		    SetRespawnPoint(parent.GlobalPosition);
+		var parent = GetParent<Node2D>();
+		if (parent != null)
+			SetRespawnPosition(parent.GlobalPosition);
 	}
 
 	/// <summary>
@@ -113,7 +120,7 @@ public partial class Health : Node, IHealth {
 	/// </summary>
 	private void RespawnCheck(float delta) {
 		if (!IsAlive() && respawnDelay > 0) {
-            respawnDelayLeft -= delta;
+			respawnDelayLeft -= delta;
 			if (respawnDelayLeft <= 0) {
 				Respawn();
 			}
@@ -135,6 +142,39 @@ public partial class Health : Node, IHealth {
 
 	// The position that the health's gameobject will respawn at
 	private Vector2 respawnPosition;
+	private Node2D respawnNode;
+
+#if DEBUG
+	public void SetNextRespawn() {
+		var checkpoints = GetTree().GetNodesInGroup("checkpoint");
+		if (checkpoints.Count == 0)
+			return;
+		int nextIndex = 0;
+		if (respawnNode != null) {
+			int curIndex = checkpoints.IndexOf(respawnNode);
+			if (curIndex >= 0) {
+				nextIndex = ( curIndex + 1 ) % checkpoints.Count;
+			}
+		}
+		SetRespawnNode(checkpoints[nextIndex] as Node2D);
+	}
+
+	public void SetPrevRespawn() {
+		var checkpoints = GetTree().GetNodesInGroup("checkpoint");
+		if (checkpoints.Count == 0)
+			return;
+		int prevIndex = 0;
+		if (respawnNode != null) {
+			int curIndex = checkpoints.IndexOf(respawnNode);
+			if (curIndex >= 0) {
+				prevIndex = ( curIndex - 1 + checkpoints.Count ) % checkpoints.Count;
+			}
+		}
+		SetRespawnNode(checkpoints[prevIndex] as Node2D);
+	}
+
+#endif
+
 
 	/// <summary>
 	/// Description:
@@ -145,8 +185,46 @@ public partial class Health : Node, IHealth {
 	/// void (no return)
 	/// </summary>
 	/// <param name="newRespawnPosition">The new position to respawn at</param>
-	public void SetRespawnPoint(Vector2 newRespawnPosition) {
+	public void SetRespawnPosition(Vector2 newRespawnPosition) {
 		respawnPosition = newRespawnPosition;
+		if (respawnNode != null) {
+			if (respawnNode.HasMethod("unset_cp"))
+				respawnNode.Call("unset_cp");
+			else if (respawnNode is IRespawnPoint respawnPoint) {
+				respawnPoint.OnRespawnUnset();
+			}
+			respawnNode = null;
+		}
+	}
+
+	public void SetRespawnNode(Node2D node) {
+		if (respawnNode != null) {
+			if (respawnNode.HasMethod("on_respawn_unset"))
+				respawnNode.Call("on_respawn_unset");
+			else if (respawnNode is IRespawnPoint respawnPoint) {
+				respawnPoint.OnRespawnUnset();
+			}
+			respawnNode = null;
+		}
+		respawnNode = node;
+		if (node != null) {
+			if (respawnNode.HasMethod("on_respawn_set"))
+				respawnNode.Call("on_respawn_set");
+			else if (respawnNode is IRespawnPoint respawnPoint) {
+				respawnPoint.OnRespawnSet();
+			}
+			respawnPosition = GetRespawnPosition();
+		}
+	}
+
+	public Vector2 GetRespawnPosition() {
+		if (respawnNode != null) {
+			if (respawnNode is IRespawnPoint respawnPoint) {
+				return respawnPoint.GetRespawnPosition();
+			}
+			return respawnNode.GlobalPosition;
+		}
+		return respawnPosition;
 	}
 
 	/// <summary>
@@ -157,12 +235,12 @@ public partial class Health : Node, IHealth {
 	/// Returns:
 	/// void (no return)
 	/// </summary>
-	void Respawn() {
-        var parent = GetParent<Node2D>();
-        parent.GlobalPosition = respawnPosition + respawnOffset;
+	public void Respawn() {
+		var parent = GetParent<Node2D>();
+		parent.GlobalPosition = GetRespawnPosition() + respawnOffset;
 		Hp = MaxHp;
-        respawnDelayLeft = 0;
-        invincibleTimeLeft = invincibleTimeOnHit;
+		respawnDelayLeft = 0;
+		invincibleTimeLeft = invincibleTimeOnHit;
 	}
 
 	/// <summary>
@@ -175,44 +253,44 @@ public partial class Health : Node, IHealth {
 	/// </summary>
 	/// <param name="amount">The amount of damage to take</param>
 	public TakeDamageOutcome TakeDamage(int amount) {
-        GD.Print("dmg");
+		GD.Print("dmg");
 		if (IsInvincible())
 			return ignoreOnInvincible ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
-        if (!IsAlive())
+		if (!IsAlive())
 			return ignoreOnDead ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
-        Hp = Mathf.Max(Hp - amount, 0);
-        invincibleTimeLeft = invincibleTimeOnHit;
-        EmitSignal(nameof(Damaged), amount);
-        if (!IsAlive()) {
-            GD.Print("die");
-            Die();
-            return TakeDamageOutcome.Received | TakeDamageOutcome.Killed;
-        }
-        SpawnEffect(hitEffect);
-        return TakeDamageOutcome.Received;
+		Hp = Mathf.Max(Hp - amount, 0);
+		invincibleTimeLeft = invincibleTimeOnHit;
+		EmitSignal(nameof(Damaged), amount);
+		if (!IsAlive()) {
+			GD.Print("die");
+			Die();
+			return TakeDamageOutcome.Received | TakeDamageOutcome.Killed;
+		}
+		SpawnEffect(hitEffect);
+		return TakeDamageOutcome.Received;
 	}
 
-    public bool ReceiveHealing(int amount, int overheal = 0) {
-        var newHp = Mathf.Min(Hp + amount, MaxHp + overheal); // Limit new hp by the max hp shifted by overheal
-        var hpGain = newHp - Hp;
-        if (hpGain > 0) { // Only receive healing if health would be gained
-            Hp = newHp;
-            EmitSignal(nameof(Healed), hpGain);
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public bool ReceiveHealing(int amount, int overheal = 0) {
+		var newHp = Mathf.Min(Hp + amount, MaxHp + overheal); // Limit new hp by the max hp shifted by overheal
+		var hpGain = newHp - Hp;
+		if (hpGain > 0) { // Only receive healing if health would be gained
+			Hp = newHp;
+			EmitSignal(nameof(Healed), hpGain);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    private void SpawnEffect(PackedScene effect) {
-        if (effect == null)
-            return;
-        var parent = GetParent<Node2D>();
-        var inst = effect.Instance<Node2D>();
+	private void SpawnEffect(PackedScene effect) {
+		if (effect == null)
+			return;
+		var parent = GetParent<Node2D>();
+		var inst = effect.Instance<Node2D>();
 		GetViewport().AddChild(inst);
 		inst.GlobalPosition = parent.GlobalPosition;
-        inst.GlobalRotation = parent.GlobalRotation;
-    }
+		inst.GlobalRotation = parent.GlobalRotation;
+	}
 
 	/// <summary>
 	/// Description:
@@ -245,19 +323,19 @@ public partial class Health : Node, IHealth {
 	/// </summary>
 	public void Die() {
 		if (deathEffect != null)
-            SpawnEffect(deathEffect);
+			SpawnEffect(deathEffect);
 
-        EmitSignal(nameof(Died));
-        if (IsAlive()) {
-            Hp = 0;
-        }
+		EmitSignal(nameof(Died));
+		if (IsAlive()) {
+			Hp = 0;
+		}
 
 		if (useLives) {
 			if (currentLives > 0 || infiniteRespawns) {
-                if (!infiniteRespawns)
-        			currentLives -= 1;
-	
-    			if (respawnDelay == 0) {
+				if (!infiniteRespawns)
+					currentLives -= 1;
+
+				if (respawnDelay == 0) {
 					Respawn();
 				} else {
 					respawnDelayLeft = respawnDelay;
@@ -266,14 +344,14 @@ public partial class Health : Node, IHealth {
 				if (respawnDelay != 0) {
 					respawnDelayLeft = respawnDelay;
 				} else {
-                    GetParent().QueueFree();
+					GetParent().QueueFree();
 				}
 				//GameOver();
 			}
 
 		} else {
 			//GameOver();
-            GetParent().QueueFree();
+			GetParent().QueueFree();
 		}
 	}
 

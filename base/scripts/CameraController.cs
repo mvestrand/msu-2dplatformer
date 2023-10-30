@@ -5,7 +5,7 @@ using Godot;
 /// Class which handles camera movement
 /// </summary>
 public partial class CameraController : Camera2D {
-    [Export] public NodePath targetPath;
+	[Export] public NodePath targetPath;
 	public Node2D target = null;
 
 
@@ -18,7 +18,7 @@ public partial class CameraController : Camera2D {
 		Overhead,
 		DistanceFollow,
 		OffsetFollow,
-        LerpFollow,
+		LerpFollow,
 		BetweenTargetAndMouse
 	}
 
@@ -26,81 +26,81 @@ public partial class CameraController : Camera2D {
 	[Export] public float maxDistanceFromTarget = 100.0f;
 	[Export] public Vector2 cameraOffset = Vector2.Zero;
 	[Export] public float mouseTracking = 0.5f;
-    [Export] public float camFollowSpeed = 1f;
-    [Export] public bool tryUseSubpixelCamera = false;
+	[Export] public float camFollowSpeed = 1f;
+	[Export] public bool tryUseSubpixelCamera = false;
 
-    private bool useSubpixelCamera = false;
-    private Vector2 actualPosition = Vector2.Zero;
+	private bool useSubpixelCamera = false;
+	private Vector2 actualPosition = Vector2.Zero;
 
-    private WeakReference<ShaderMaterial> subpixelShaderMat;
+	private WeakReference<ShaderMaterial> subpixelShaderMat;
 
 
 	public override void _Ready() {
-        target = GetNode<Node2D>(targetPath);
-        if (tryUseSubpixelCamera)
-            SetupSubpixelCamera();
+		target = GetNode<Node2D>(targetPath);
+		if (tryUseSubpixelCamera)
+			SetupSubpixelCamera();
 	}
 
-    public override void _PhysicsProcess(float delta) {
-        SetCameraPosition(delta);
-    }
+	public override void _PhysicsProcess(float delta) {
+		SetCameraPosition(delta);
+	}
 
-    public override void _Process(float delta) {
-        SetCameraPosition(delta);
-    }
+	public override void _Process(float delta) {
+		SetCameraPosition(delta);
+	}
 
-    private void SetupSubpixelCamera() {
-        useSubpixelCamera = false;
-        var vpContainer = GetViewport().GetParentOrNull<ViewportContainer>();
-        if (vpContainer == null) {
-            GD.PushWarning("Subpixel camera setup failed: Viewport \"" + GetViewport().Name + "\" has no parent. To use the subpixel camera it must be in a ViewportContainer with a shader material using GameWindow.gdshader");
-            return;
-        }
-        var mat = vpContainer.Material as ShaderMaterial;
-        if (mat == null) {
-            GD.PushWarning("Subpixel camera setup failed: Viewport \"" + vpContainer.Name + "\" does not use a ShaderMaterial. To use the subpixel camera the Viewport must be in a ViewportContainer with a shader material using GameWindow.gdshader");
-            return;            
-        }
-        if (mat.GetShaderParam("cam_offset") == null) {
-            GD.PushWarning("Subpixel camera setup failed: Failed to find shader param \"cam_offset\" in the material of \"" + vpContainer.Name + "\". To use the subpixel camera the Viewport must be in a ViewportContainer with a shader material using GameWindow.gdshader");
-            return;            
-        }
-        // Found 
-        subpixelShaderMat = new WeakReference<ShaderMaterial>(mat);
-        useSubpixelCamera = true;
+	private void SetupSubpixelCamera() {
+		useSubpixelCamera = false;
+		var vpContainer = GetViewport().GetParentOrNull<ViewportContainer>();
+		if (vpContainer == null) {
+			GD.PushWarning("Subpixel camera setup failed: Viewport \"" + GetViewport().Name + "\" has no parent. To use the subpixel camera it must be in a ViewportContainer with a shader material using GameWindow.gdshader");
+			return;
+		}
+		var mat = vpContainer.Material as ShaderMaterial;
+		if (mat == null) {
+			GD.PushWarning("Subpixel camera setup failed: Viewport \"" + vpContainer.Name + "\" does not use a ShaderMaterial. To use the subpixel camera the Viewport must be in a ViewportContainer with a shader material using GameWindow.gdshader");
+			return;
+		}
+		if (mat.GetShaderParam("cam_offset") == null) {
+			GD.PushWarning("Subpixel camera setup failed: Failed to find shader param \"cam_offset\" in the material of \"" + vpContainer.Name + "\". To use the subpixel camera the Viewport must be in a ViewportContainer with a shader material using GameWindow.gdshader");
+			return;
+		}
+		// Found 
+		subpixelShaderMat = new WeakReference<ShaderMaterial>(mat);
+		useSubpixelCamera = true;
 
-    }
+	}
 
-    public Vector2 GetPos() {
-        if (useSubpixelCamera)
-            return actualPosition;
-        else
-            return GlobalPosition;
-    }
+	public Vector2 GetPos() {
+		if (useSubpixelCamera)
+			return actualPosition;
+		else
+			return GlobalPosition;
+	}
 
-    public void SetPos(Vector2 pos) {
-        if (useSubpixelCamera) {
-            actualPosition = pos;
-            GlobalPosition = pos.Round();
-            var subpixelPosition = GlobalPosition - actualPosition;
-            // GD.Print(actualPosition, GlobalPosition, subpixelPosition);
-            if (subpixelShaderMat.TryGetTarget(out var mat)) {
-                mat.SetShaderParam("cam_offset", subpixelPosition);
-            }
-        } else {
-            GlobalPosition = pos;
-        }
-    }
+	public void SetPos(Vector2 pos) {
+		if (useSubpixelCamera) {
+			actualPosition = pos;
+			GlobalPosition = pos.Round();
+			var subpixelPosition = GlobalPosition - actualPosition;
+			// GD.Print(actualPosition, GlobalPosition, subpixelPosition);
+			if (subpixelShaderMat.TryGetTarget(out var mat)) {
+				mat.SetShaderParam("cam_offset", subpixelPosition);
+			}
+		} else {
+			GlobalPosition = pos;
+		}
+	}
 
-    /// <summary>
-    /// Description:
-    /// Sets the camera's position according to the settings
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
-    /// </summary>
-    private void SetCameraPosition(float delta) {
+	/// <summary>
+	/// Description:
+	/// Sets the camera's position according to the settings
+	/// Input:
+	/// none
+	/// Return:
+	/// void (no return)
+	/// </summary>
+	private void SetCameraPosition(float delta) {
 		if (target != null) {
 			Vector2 targetPosition = GetTargetPosition();
 			Vector2 mousePosition = GetPlayerMousePosition();
@@ -136,7 +136,7 @@ public partial class CameraController : Camera2D {
 	/// </summary>
 	/// <returns>Vector3: The position of the player's mouse in world coordinates</returns>
 	public Vector2 GetPlayerMousePosition() {
-        return GetGlobalMousePosition();
+		return GetGlobalMousePosition();
 	}
 
 	/// <summary>
@@ -160,14 +160,14 @@ public partial class CameraController : Camera2D {
 				result = targetPosition;
 				break;
 			case CameraStyles.DistanceFollow:
-				result = targetPosition + (GetPos() - targetPosition).LimitLength(maxDistanceFromTarget);
+				result = targetPosition + ( GetPos() - targetPosition ).LimitLength(maxDistanceFromTarget);
 				break;
 			case CameraStyles.OffsetFollow:
 				result = targetPosition + cameraOffset;
 				break;
-            case CameraStyles.LerpFollow:
-                result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed*delta);
-                break;
+			case CameraStyles.LerpFollow:
+				result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
+				break;
 			case CameraStyles.BetweenTargetAndMouse:
 				Vector2 desiredPosition = targetPosition.LinearInterpolate(mousePosition, mouseTracking);
 				Vector2 difference = desiredPosition - targetPosition;
