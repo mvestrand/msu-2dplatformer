@@ -41,7 +41,7 @@ animations = [ {
 [sub_resource type="CircleShape2D" id=8]
 radius = 15.0
 
-[node name="Level1" type="Node2D"]
+[node name="Playground" type="Node2D"]
 __meta__ = {
 "_edit_horizontal_guides_": [  ]
 }
@@ -128,7 +128,7 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Anchor"]
 frames = SubResource( 7 )
-frame = 1
+frame = 2
 playing = true
 offset = Vector2( 0, -1 )
 
@@ -142,6 +142,7 @@ shape = SubResource( 8 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Pendulum"]
 scale = Vector2( 4, 4 )
 frames = SubResource( 7 )
+frame = 1
 playing = true
 offset = Vector2( 0, -1 )
 

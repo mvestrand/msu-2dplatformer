@@ -117,6 +117,7 @@ debug_respawn={
 
 [mono]
 
+runtime/unhandled_exception_policy=1
 project/assembly_name="MSU_2DPlatformer"
 
 [physics]
