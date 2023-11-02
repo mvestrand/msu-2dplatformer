@@ -1,0 +1,49 @@
+Survival idea core loop
+- Too much to do to be practical
+
+ -> Each day in base player must fulfill basic needs
+    - Improvements here improve expedition ability
+    - Critical (will kill you if not quickly dealt with)
+        - Food (hydroponics, greenhouse)
+        - Water (water treatment)
+        - Oxygen (life support)
+        - Sleep (crew bunk)
+        - Temperature (life support?)
+    - Secondary (will cause serious problems if not dealt with)
+        - Power & light (powerplant)
+        - Security (blast doors?)
+        - Health & sickness (medbay, radiation shielding)
+        - Waste management (sewage, greenhouse)
+        - Surface scanner?
+    - Comfort (give you bonuses, but can survive without them)
+        - Gym
+        - Lounge
+        - Lab
+        - Bedroom
+        - ?
+ -> Expedition
+    - Finds here allow base to be improved
+    - Go to exploration sites to look for materials, find info, advance game, find blueprints
+
+
+Mini metroidvania game
+Plot: Engineer has to fix the station
+-> Give character a wrench
+    - Whack with wrench
+        - Quick 3-hit combo
+    - Throw wrench
+        - Boomerang
+        - Bounce w/ gravity on throw, fly back on return?
+    - Throw wrench as grapplehook
+        - Latch-on to bolts, turn them as the player swings
+- Wall jump?
+- Slide?
+
+- Enemies
+    - basic walking ground enemy
+    - short ground enemy (under wrench)
+    - flying enemies
+    - front shielded enemy
+        - shield always faces player, including up
+        - beat using Boomerang
+

@@ -89,7 +89,6 @@ public partial class PlayerController : KinematicBody2D {
 		sprite = GetNode<AnimatedSprite>(spritePath);
 		health = GetNode<Health>(healthPath);
 		//Connect("DamageDealt", GetNode(killboxPath), nameof(Bounce));
-
 	}
 
 #if DEBUG
