@@ -48,6 +48,8 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] public float jumpDuration = 0.1f;
 	[Export] public PackedScene jumpEffect = null;
 	[Export] public PackedScene landEffect = null;
+	[Export] public float storeVelocityTime = 0.1f;
+	[Export] public float minSpeed = 10f;
 	[Export(PropertyHint.Layers2dPhysics)] public uint passThroughLayers;
 
 	// [Export] public List<string> passThroughLayers = new List<string>();
@@ -60,6 +62,8 @@ public partial class PlayerController : KinematicBody2D {
 	}
 	private float jumpTime = 0;
 	public Vector2 Velocity = Vector2.Zero;
+	public Vector2 storedVelocity = Vector2.Zero;
+
 
 
 	private Vector2 moveInput = Vector2.Zero;
@@ -158,10 +162,23 @@ public partial class PlayerController : KinematicBody2D {
 	private void HandleMovementInput(float delta) {
 		// Horizontal movement        
 		if (Mathf.Abs(moveInput.x) > 0 && state != PlayerState.Dead) {
-			Velocity.x = moveSpeed * moveInput.x;
-			sprite.FlipH = moveInput.x < 0;
+			if (moveAccel > 0) {
+				if (Mathf.Sign(moveInput.x) != Mathf.Sign(Velocity.x)) {
+					ApplyFriction(delta);
+				}
+				if (Mathf.Abs(Velocity.x) < minSpeed)
+					Velocity.x = Mathf.Sign(moveInput.x) * minSpeed;
+				Velocity.x += moveAccel * moveInput.x * delta;
+				Velocity.x = Mathf.Clamp(Velocity.x, -moveSpeed, moveSpeed);
+				sprite.FlipH = moveInput.x < 0;
+			} else {
+				Velocity.x = moveSpeed * moveInput.x;
+				sprite.FlipH = moveInput.x < 0;
+			}
 		} else { // Apply friction
 			ApplyFriction(delta);
+			if (Mathf.Abs(Velocity.x) < minSpeed)
+				Velocity.x = 0;
 		}
 		// Apply gravity
 		if (!IsOnFloor()) {

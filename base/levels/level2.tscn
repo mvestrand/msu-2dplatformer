@@ -3,10 +3,10 @@
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
-[ext_resource path="res://base/tilesets/platforms.tres" type="TileSet" id=5]
+[ext_resource path="res://base/scenes/MovingPlatform.tscn" type="PackedScene" id=4]
 [ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
 
-[node name="Level1" type="Node2D"]
+[node name="Level2" type="Node2D"]
 __meta__ = {
 "_edit_horizontal_guides_": [  ]
 }
@@ -62,16 +62,9 @@ cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
 format = 1
 
-[node name="Platforms" type="TileMap" parent="Env/Tiles"]
-z_index = 1
-tile_set = ExtResource( 5 )
-cell_size = Vector2( 16, 16 )
-cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
-collision_layer = 2
-collision_mask = 0
-format = 1
-tile_data = PoolIntArray( -786417, 0, 0, -786416, 0, 4, -786415, 0, 4, -786414, 0, 4, -786413, 0, 4, -786412, 0, 4, -786411, 0, 4, -786410, 0, 5 )
-
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 autoplay = true
+
+[node name="MovingPlatform" parent="." instance=ExtResource( 4 )]
+position = Vector2( -80, -64 )

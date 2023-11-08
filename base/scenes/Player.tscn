@@ -26,11 +26,15 @@ script = ExtResource( 2 )
 spritePath = NodePath("AnimatedSprite")
 healthPath = NodePath("Health")
 killboxPath = NodePath("")
-moveSpeed = 200.0
+moveSpeed = 500.0
+moveAccel = 200.0
 jumpPower = 360.0
+groundFriction = 4.0
+airFriction = 10.0
 allowedJumps = 2
 jumpEffect = ExtResource( 3 )
 landEffect = ExtResource( 4 )
+minSpeed = 100.0
 passThroughLayers = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

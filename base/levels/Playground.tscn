@@ -1,45 +1,10 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/scenes/Checkpoint.tscn" type="PackedScene" id=3]
-[ext_resource path="res://base/art/collectables/score/Score_Big.png" type="Texture" id=4]
 [ext_resource path="res://base/tilesets/platforms.tres" type="TileSet" id=5]
 [ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
-
-[sub_resource type="CircleShape2D" id=1]
-radius = 4.12311
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 4 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 4 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 4 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 4 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 4 )
-region = Rect2( 128, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=7]
-animations = [ {
-"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
-"loop": true,
-"name": "default",
-"speed": 5.0
-} ]
-
-[sub_resource type="CircleShape2D" id=8]
-radius = 15.0
 
 [node name="Playground" type="Node2D"]
 __meta__ = {
@@ -119,37 +84,3 @@ position = Vector2( -64, 0 )
 position = Vector2( 400, 0 )
 
 [node name="Enemies" type="Node2D" parent="."]
-
-[node name="Anchor" type="StaticBody2D" parent="."]
-position = Vector2( -112, -94 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor"]
-shape = SubResource( 1 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Anchor"]
-frames = SubResource( 7 )
-frame = 4
-playing = true
-offset = Vector2( 0, -1 )
-
-[node name="Pendulum" type="RigidBody2D" parent="."]
-position = Vector2( -161, -59 )
-mode = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pendulum"]
-shape = SubResource( 8 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Pendulum"]
-scale = Vector2( 4, 4 )
-frames = SubResource( 7 )
-frame = 3
-playing = true
-offset = Vector2( 0, -1 )
-
-[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
-position = Vector2( -72, -16 )
-rotation = -4.26384
-node_a = NodePath("../Player")
-node_b = NodePath("../Pendulum")
-length = 99.0
-rest_length = 1.0
