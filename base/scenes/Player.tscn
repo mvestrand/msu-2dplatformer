@@ -31,7 +31,6 @@ moveAccel = 200.0
 jumpPower = 360.0
 groundFriction = 4.0
 airFriction = 10.0
-allowedJumps = 2
 jumpEffect = ExtResource( 3 )
 landEffect = ExtResource( 4 )
 minSpeed = 100.0

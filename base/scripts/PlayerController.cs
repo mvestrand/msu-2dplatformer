@@ -127,6 +127,7 @@ public partial class PlayerController : KinematicBody2D {
 	public override void _PhysicsProcess(float delta) {
 		//base._PhysicsProcess(delta);
 		UpdateInputs();
+		UpdateFreeJump(delta);
 		HandleMovementInput(delta);
 		HandleJump(delta);
 		//UpdateSpriteDirection();
@@ -140,6 +141,24 @@ public partial class PlayerController : KinematicBody2D {
 #if DEBUG
 		HandleDebugInputs();
 #endif
+	}
+
+	private float freeJumpTime = 0;
+
+    private void UpdateFreeJump(float delta) {
+        if (IsOnFloor()) {
+			freeJumpTime = coyoteTime;
+		} else if (coyoteTime > 0) {
+			freeJumpTime -= delta;
+		}
+    }
+
+	private bool HasFreeJump() {
+		return freeJumpTime > 0 && freeGroundJumps;
+	}
+
+    private void ExhaustFreeJump() {
+		freeJumpTime = 0;
 	}
 
 	private float LandEffectMinSpeed = 5;
@@ -209,7 +228,7 @@ public partial class PlayerController : KinematicBody2D {
 			jumpTime -= delta;
 		}
 		if (jumpPressed) {
-			Jump();
+			TryJump();
 		}
 
 	}
@@ -223,13 +242,17 @@ public partial class PlayerController : KinematicBody2D {
 	/// void (no return)
 	/// </summary>
 	/// <returns>IEnumerator: makes coroutine possible</returns>
-	private void Jump(float powerMultiplier = 1.0f) {
-		if (timesJumped < allowedJumps && state != PlayerState.Dead) {
+	private void TryJump(float powerMultiplier = 1.0f) {
+		bool freeJump = HasFreeJump();
+		if ((timesJumped < allowedJumps || freeJump) && state != PlayerState.Dead) {
 			float new_y = -jumpPower * powerMultiplier;
 			jumpTime = jumpDuration;
 			SpawnEffect(jumpEffect);
 			Velocity.y = new_y;
-			timesJumped++;
+			if (freeJump)
+				ExhaustFreeJump();
+			else
+                timesJumped++;
 		}
 	}
 
@@ -260,9 +283,9 @@ public partial class PlayerController : KinematicBody2D {
 	public void Bounce() {
 		timesJumped = 0;
 		if (jumpHeld) {
-			Jump(1.5f);
+			TryJump(1.5f);
 		} else {
-			Jump(1.0f);
+			TryJump(1.0f);
 		}
 	}
 
