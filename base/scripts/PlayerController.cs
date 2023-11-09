@@ -36,7 +36,11 @@ public partial class PlayerController : KinematicBody2D {
 	}
 
 	[Export] public float gravity = (int)ProjectSettings.GetSetting("physics/2d/default_gravity");
-	[Export] public float moveSpeed = 300.0f;
+	[Export] public float walkSpeed = 200;
+	[Export] public float runSpeed = 350;
+	[Export] public float sprintSpeed = 500;
+	[Export] public float airMaxAccelSpeed = 200;
+
 	[Export] public float moveAccel = 0;
 	[Export] public float jumpPower = 500.0f;
 	[Export] public float maxFallSpeed = 1000f;
@@ -69,6 +73,7 @@ public partial class PlayerController : KinematicBody2D {
 	private Vector2 moveInput = Vector2.Zero;
 	private bool jumpHeld = false;
 	private bool jumpPressed = false;
+	private bool runHeld = false;
 	private void UpdateInputs() {
 		if (!health.IsAlive())
 			return;
@@ -76,6 +81,7 @@ public partial class PlayerController : KinematicBody2D {
 		moveInput.y = Input.GetAxis("p1_move_up", "p1_move_down");
 		jumpPressed = Input.IsActionJustPressed("p1_jump");
 		jumpHeld = Input.IsActionPressed("p1_jump");
+		runHeld = Input.IsActionPressed("p1_run");
 	}
 
 	public enum PlayerState {
@@ -128,6 +134,9 @@ public partial class PlayerController : KinematicBody2D {
 		//base._PhysicsProcess(delta);
 		UpdateInputs();
 		UpdateFreeJump(delta);
+
+		HandleAdvancedMovement(delta);
+
 		HandleMovementInput(delta);
 		HandleJump(delta);
 		//UpdateSpriteDirection();
@@ -142,6 +151,33 @@ public partial class PlayerController : KinematicBody2D {
 		HandleDebugInputs();
 #endif
 	}
+
+    private void HandleAdvancedMovement(float delta) {
+        // Dead or zero input
+            // On ground
+                // Run held
+                    // Slow: Med friction
+                // Run not held
+                    // Brake: high friction
+            // Midair
+                // Slow: Med friction
+        
+        // Input in direction of movement
+            // On ground
+                // Run held
+                    // Accel to run speed
+                // Run not held
+                    // Slow: to walk speed
+                    // Set to walk speed
+                // targetVel = (run ? walkSpeed : runSpeed) * input.x
+                // if targetVel < vel
+                    //  
+            // Midair
+
+        // Input against direction of movement
+            // On ground
+            // Midair
+    }
 
 	private float freeJumpTime = 0;
 
@@ -188,10 +224,10 @@ public partial class PlayerController : KinematicBody2D {
 				if (Mathf.Abs(Velocity.x) < minSpeed)
 					Velocity.x = Mathf.Sign(moveInput.x) * minSpeed;
 				Velocity.x += moveAccel * moveInput.x * delta;
-				Velocity.x = Mathf.Clamp(Velocity.x, -moveSpeed, moveSpeed);
+				Velocity.x = Mathf.Clamp(Velocity.x, -walkSpeed, walkSpeed);
 				sprite.FlipH = moveInput.x < 0;
 			} else {
-				Velocity.x = moveSpeed * moveInput.x;
+				Velocity.x = walkSpeed * moveInput.x;
 				sprite.FlipH = moveInput.x < 0;
 			}
 		} else { // Apply friction
