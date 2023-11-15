@@ -36,12 +36,15 @@ public partial class PlayerController : KinematicBody2D {
 	}
 
 	[Export] public float gravity = (int)ProjectSettings.GetSetting("physics/2d/default_gravity");
-	[Export] public float walkSpeed = 200;
-	[Export] public float runSpeed = 350;
-	[Export] public float sprintSpeed = 500;
-	[Export] public float airMaxAccelSpeed = 200;
+    [Export] public float moveSpeed = 200;
+	[Export] public float moveAccel = 200;
+	[Export] public float moveDecel = 200;
+	[Export] public float moveExponent = 2.2f;
+	// [Export] public float walkSpeed = 200;
+	// [Export] public float runSpeed = 350;
+	// [Export] public float sprintSpeed = 500;
+	// [Export] public float airMaxAccelSpeed = 200;
 
-	[Export] public float moveAccel = 0;
 	[Export] public float jumpPower = 500.0f;
 	[Export] public float maxFallSpeed = 1000f;
 	[Export] public float groundFriction = 500;
@@ -134,9 +137,6 @@ public partial class PlayerController : KinematicBody2D {
 		//base._PhysicsProcess(delta);
 		UpdateInputs();
 		UpdateFreeJump(delta);
-
-		HandleAdvancedMovement(delta);
-
 		HandleMovementInput(delta);
 		HandleJump(delta);
 		//UpdateSpriteDirection();
@@ -151,33 +151,6 @@ public partial class PlayerController : KinematicBody2D {
 		HandleDebugInputs();
 #endif
 	}
-
-    private void HandleAdvancedMovement(float delta) {
-        // Dead or zero input
-            // On ground
-                // Run held
-                    // Slow: Med friction
-                // Run not held
-                    // Brake: high friction
-            // Midair
-                // Slow: Med friction
-        
-        // Input in direction of movement
-            // On ground
-                // Run held
-                    // Accel to run speed
-                // Run not held
-                    // Slow: to walk speed
-                    // Set to walk speed
-                // targetVel = (run ? walkSpeed : runSpeed) * input.x
-                // if targetVel < vel
-                    //  
-            // Midair
-
-        // Input against direction of movement
-            // On ground
-            // Midair
-    }
 
 	private float freeJumpTime = 0;
 
@@ -215,26 +188,33 @@ public partial class PlayerController : KinematicBody2D {
     /// </summary>
     /// <param name="delta"></param>
 	private void HandleMovementInput(float delta) {
-		// Horizontal movement        
-		if (Mathf.Abs(moveInput.x) > 0 && state != PlayerState.Dead) {
-			if (moveAccel > 0) {
-				if (Mathf.Sign(moveInput.x) != Mathf.Sign(Velocity.x)) {
-					ApplyFriction(delta);
-				}
-				if (Mathf.Abs(Velocity.x) < minSpeed)
-					Velocity.x = Mathf.Sign(moveInput.x) * minSpeed;
-				Velocity.x += moveAccel * moveInput.x * delta;
-				Velocity.x = Mathf.Clamp(Velocity.x, -walkSpeed, walkSpeed);
-				sprite.FlipH = moveInput.x < 0;
-			} else {
-				Velocity.x = walkSpeed * moveInput.x;
-				sprite.FlipH = moveInput.x < 0;
-			}
-		} else { // Apply friction
-			ApplyFriction(delta);
-			if (Mathf.Abs(Velocity.x) < minSpeed)
-				Velocity.x = 0;
-		}
+		float targetXVelocity = 0;
+        if (state != PlayerState.Dead)
+            targetXVelocity = moveInput.x * moveSpeed;
+
+		float velDiff = targetXVelocity - Velocity.x;
+		float acceleration = ( !Mathf.IsEqualApprox(targetXVelocity, 0, 0.01f) ? moveAccel : moveDecel );
+
+		// // Horizontal movement        
+		// if (Mathf.Abs(moveInput.x) > 0 && state != PlayerState.Dead) {
+		// 	if (moveAccel > 0) {
+		// 		if (Mathf.Sign(moveInput.x) != Mathf.Sign(Velocity.x)) {
+		// 			ApplyFriction(delta);
+		// 		}
+		// 		if (Mathf.Abs(Velocity.x) < minSpeed)
+		// 			Velocity.x = Mathf.Sign(moveInput.x) * minSpeed;
+		// 		Velocity.x += moveAccel * moveInput.x * delta;
+		// 		Velocity.x = Mathf.Clamp(Velocity.x, -walkSpeed, walkSpeed);
+		// 		sprite.FlipH = moveInput.x < 0;
+		// 	} else {
+		// 		Velocity.x = walkSpeed * moveInput.x;
+		// 		sprite.FlipH = moveInput.x < 0;
+		// 	}
+		// } else { // Apply friction
+		// 	ApplyFriction(delta);
+		// 	if (Mathf.Abs(Velocity.x) < minSpeed)
+		// 		Velocity.x = 0;
+		// }
 		// Apply gravity
 		if (!IsOnFloor()) {
 			Velocity.y = Mathf.Min(Velocity.y + gravity * delta, maxFallSpeed);
