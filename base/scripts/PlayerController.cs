@@ -268,6 +268,19 @@ public partial class PlayerController : KinematicBody2D {
 		}
 	}
 
+	[Export] Curve curve_accelCurve = new Curve();
+	[Export] Curve curve_brakeCurve = new Curve();
+	[Export] Curve curve_airCurve = new Curve();
+	[Export] float curve_maxSpeed = 200;
+    private void AccelCurveMove(float delta) {
+		float targetXVelocity = 0;
+        if (state != PlayerState.Dead)
+            targetXVelocity = inputs.Move.x * exp_moveSpeed;
+
+		float velDiff = targetXVelocity - Velocity.x;
+
+    }
+
 	private void ApplyGravity(float delta) {
 		if (!IsOnFloor()) {
 			Velocity.y = Mathf.Min(Velocity.y + gravity * delta, maxFallSpeed);
