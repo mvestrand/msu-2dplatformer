@@ -223,10 +223,11 @@ public partial class PlayerController : KinematicBody2D {
 
 	public enum MoveMode {
 		Simple,
-		ExponentialForce
+		ExponentialForce,
+        AccelerationCurve
 	}
 
-	[Export(PropertyHint.Enum,"Simple,Exponential Force")] public MoveMode moveMode;
+	[Export(PropertyHint.Enum,"Simple,Exponential Force,Acceleration Curve")] public MoveMode moveMode;
 
 	private void HandleMovementInput(float delta) {
 		switch (moveMode) {
@@ -235,6 +236,9 @@ public partial class PlayerController : KinematicBody2D {
 				break;
 			case MoveMode.ExponentialForce:
 				ExpForceMove(delta);
+				break;
+            case MoveMode.AccelerationCurve:
+				AccelCurveMove(delta);
 				break;
 		}
 	}
@@ -268,16 +272,28 @@ public partial class PlayerController : KinematicBody2D {
 		}
 	}
 
-	[Export] Curve curve_accelCurve = new Curve();
-	[Export] Curve curve_brakeCurve = new Curve();
-	[Export] Curve curve_airCurve = new Curve();
+	[Export] Curve curve_accelCurve;
+	[Export] float curve_velDiffScaling = 100;
+	[Export] float curve_accelScaling = 100;
 	[Export] float curve_maxSpeed = 200;
     private void AccelCurveMove(float delta) {
 		float targetXVelocity = 0;
         if (state != PlayerState.Dead)
-            targetXVelocity = inputs.Move.x * exp_moveSpeed;
+            targetXVelocity = inputs.Move.x * curve_maxSpeed;
 
 		float velDiff = targetXVelocity - Velocity.x;
+
+		//GD.Print(velDiff);
+		float force = curve_accelScaling * curve_accelCurve.Interpolate(Mathf.Abs(velDiff) / curve_velDiffScaling);
+		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, force*delta);
+		GD.Print(Mathf.Abs(velDiff) / curve_velDiffScaling);
+		
+
+		// if (Mathf.IsEqualApprox(targetXVelocity, 0, 0.01f)) {
+		// 	// float frictionForce = Mathf.Min(Mathf.Abs(Velocity.x), exp_friction);
+		// 	Velocity.x = Mathf.MoveToward(Velocity.x, 0, exp_friction*delta);
+
+		// }
 
     }
 

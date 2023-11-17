@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://base/art/animation/Player.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://base/scripts/PlayerController.cs" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://base/scenes/effects/PlayerHurtFX.tscn" type="PackedScene" id=7]
 [ext_resource path="res://base/scenes/effects/PlayerDieFX.tscn" type="PackedScene" id=8]
 [ext_resource path="res://base/scripts/PickupZone.cs" type="Script" id=9]
+[ext_resource path="res://new_curve.tres" type="Curve" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 10 )
@@ -30,6 +31,8 @@ jumpPower = 360.0
 jumpEffect = ExtResource( 3 )
 landEffect = ExtResource( 4 )
 passThroughLayers = 2
+curve_accelCurve = ExtResource( 10 )
+curve_velDiffScaling = 400.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color( 0.592157, 0, 1, 1 )
