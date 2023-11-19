@@ -228,7 +228,7 @@ public partial class PlayerController : KinematicBody2D {
 		Advanced
 	}
 
-	[Export(PropertyHint.Enum,"Simple,Exponential Force,Acceleration Curve")] public MoveMode moveMode;
+	[Export(PropertyHint.Enum,"Simple,Exponential Force,Acceleration Curve,Advanced")] public MoveMode moveMode;
 
 	private void HandleMovementInput(float delta) {
 		switch (moveMode) {
@@ -302,19 +302,71 @@ public partial class PlayerController : KinematicBody2D {
 
     }
 
+	[Export] float adv_groundFriction = 1;
+	[Export] float adv_airFriction = 0.65f;
 	[Export] float adv_walkSpeed = 200;
 	[Export] float adv_runSpeed = 300;
 	[Export] float adv_sprintSpeed = 400;
-	[Export] float adv_walkAccel = 600;
-	[Export] float adv_runAccel = 600;
-	[Export] float adv_brakeRate = 0.4f;
-	[Export] float adv_brakeFlatAccel = 600;
+	[Export] float adv_sprintAccel = 200;
+	[Export] float adv_sprintReduce = 100;
+	[Export] float adv_sprintStartupTime = 1;
+	[Export] float adv_walkAccel = 1000;
+	[Export] float adv_runAccel = 1000;
+	[Export] float adv_walkReduce = 600;
+	[Export] float adv_runReduce = 600;
+	[Export] float adv_airMaxSpeedGain = 200;
+	float adv_sprintDelayLeft = 0;
+	//bool adv_isSkidding = false;
 	private void AdvMove(float delta) {
 		float targetXVelocity = 0;
         if (state != PlayerState.Dead)
             targetXVelocity = inputs.Move.x * (inputs.RunHeld ? adv_runSpeed : adv_walkSpeed);
 
-		float velDiff = targetXVelocity - Velocity.x;
+        // Sprint delay logic
+        if (Mathf.Abs(Velocity.x) > adv_runSpeed) { // Already at sprinting speed
+			adv_sprintDelayLeft = 0;
+		} else if (Mathf.Abs(Velocity.x) == adv_runSpeed) { // At running speed, count down delay
+			adv_sprintDelayLeft -= delta;
+		} else { // Not at max speed, reset delay countdown
+			adv_sprintDelayLeft = adv_sprintStartupTime;
+		}
+
+		bool isSprinting = adv_sprintDelayLeft <= 0 && Mathf.Sign(inputs.Move.x) == Mathf.Sign(Velocity.x) && inputs.RunHeld;
+        if (isSprinting) {
+			targetXVelocity = inputs.Move.x * adv_sprintSpeed;
+		}
+
+
+        // Cap midair speed gain
+        if (!IsOnFloor()) {
+			float maxAirSpeed = Mathf.Max(Mathf.Abs(Velocity.x), adv_airMaxSpeedGain);
+			targetXVelocity = Mathf.Clamp(targetXVelocity, Mathf.Min(Velocity.x, -adv_airMaxSpeedGain), Mathf.Max(Velocity.x, adv_airMaxSpeedGain));
+		}
+
+
+
+		float friction = ( IsOnFloor() ? adv_groundFriction : adv_airFriction );
+		float acceleration;
+
+        // Overspeed, decelerate using the reduce rate values
+        if (Mathf.Abs(Velocity.x) > Mathf.Abs(targetXVelocity) && Mathf.Sign(Velocity.x) == Mathf.Sign(targetXVelocity)) {
+            if (isSprinting)
+				acceleration = adv_sprintReduce;
+			else
+    			acceleration = ( inputs.RunHeld ? adv_runReduce : adv_walkReduce );
+        } else {
+            if (isSprinting)
+				acceleration = adv_sprintAccel;
+			else
+    			acceleration = ( inputs.RunHeld ? adv_runAccel : adv_walkAccel );
+            
+        }
+        
+		float lastVelocity = Velocity.x;
+		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, acceleration * friction * delta);
+
+        if (lastVelocity != Velocity.x)
+			GD.Print(Velocity.x);
 	}
 
 	/*	-> with velocity,  <- against velocity,  o neutral, (r) run button 
