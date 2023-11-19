@@ -13,11 +13,9 @@ __meta__ = {
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( -72, -16 )
-moveMode = 2
 exp_moveMult = 0.3
 exp_brakeMult = 0.3
 exp_friction = 200.0
-curve_accelScaling = 1000.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

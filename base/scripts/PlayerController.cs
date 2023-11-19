@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Godot;
@@ -224,7 +224,8 @@ public partial class PlayerController : KinematicBody2D {
 	public enum MoveMode {
 		Simple,
 		ExponentialForce,
-        AccelerationCurve
+        AccelerationCurve,
+		Advanced
 	}
 
 	[Export(PropertyHint.Enum,"Simple,Exponential Force,Acceleration Curve")] public MoveMode moveMode;
@@ -240,6 +241,10 @@ public partial class PlayerController : KinematicBody2D {
             case MoveMode.AccelerationCurve:
 				AccelCurveMove(delta);
 				break;
+			case MoveMode.Advanced:
+				AdvMove(delta);
+				break;
+
 		}
 	}
 
@@ -283,11 +288,11 @@ public partial class PlayerController : KinematicBody2D {
 
 		float velDiff = targetXVelocity - Velocity.x;
 
+
 		//GD.Print(velDiff);
 		float force = curve_accelScaling * curve_accelCurve.Interpolate(Mathf.Abs(velDiff) / curve_velDiffScaling);
 		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, force*delta);
 		GD.Print(Mathf.Abs(velDiff) / curve_velDiffScaling);
-		
 
 		// if (Mathf.IsEqualApprox(targetXVelocity, 0, 0.01f)) {
 		// 	// float frictionForce = Mathf.Min(Mathf.Abs(Velocity.x), exp_friction);
@@ -296,6 +301,31 @@ public partial class PlayerController : KinematicBody2D {
 		// }
 
     }
+
+	[Export] float adv_walkSpeed = 200;
+	[Export] float adv_runSpeed = 300;
+	[Export] float adv_sprintSpeed = 400;
+	[Export] float adv_walkAccel = 600;
+	[Export] float adv_runAccel = 600;
+	[Export] float adv_brakeRate = 0.4f;
+	[Export] float adv_brakeFlatAccel = 600;
+	private void AdvMove(float delta) {
+		float targetXVelocity = 0;
+        if (state != PlayerState.Dead)
+            targetXVelocity = inputs.Move.x * (inputs.RunHeld ? adv_runSpeed : adv_walkSpeed);
+
+		float velDiff = targetXVelocity - Velocity.x;
+	}
+
+	/*	-> with velocity,  <- against velocity,  o neutral, (r) run button 
+			|	o				|	->					|	-> (r)			|	<-			|	<- (r)		|
+	idle	|	nop				|	walk-accel			|	run-accel		|	-			|	-			|
+	walk	|	stop to idle	|	walk-accel			|	run-accel		|	brake-accel	|	brake-accel	|
+	run
+	*/
+
+
+
 
 	private void ApplyGravity(float delta) {
 		if (!IsOnFloor()) {
