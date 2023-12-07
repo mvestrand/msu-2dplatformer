@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
 [ext_resource path="res://base/scenes/MovingPlatform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=5]
 [ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
 
 [node name="Level2" type="Node2D"]
@@ -13,18 +14,6 @@ __meta__ = {
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( -72, -16 )
-moveMode = 3
-exp_moveMult = 0.3
-exp_brakeMult = 0.3
-exp_friction = 200.0
-adv_walkSpeed = 150.0
-adv_runSpeed = 250.0
-adv_sprintSpeed = 350.0
-adv_walkAccel = 2000.0
-adv_runAccel = 2000.0
-adv_walkReduce = 1200.0
-adv_runReduce = 1200.0
-adv_airMaxSpeedGain = 150.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -61,21 +50,33 @@ collision_mask = 0
 occluder_light_mask = 2
 format = 1
 
-[node name="Acid" type="TileMap" parent="Env/Tiles"]
-z_index = 2
-tile_set = ExtResource( 1 )
-cell_size = Vector2( 32, 32 )
-cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
-format = 1
-
 [node name="ForeDetail" type="TileMap" parent="Env/Tiles"]
 z_index = 5
 cell_size = Vector2( 32, 32 )
 cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
 format = 1
 
+[node name="Acid" type="Area2D" parent="Env/Tiles"]
+collision_layer = 8
+collision_mask = 4
+script = ExtResource( 5 )
+teamId = 1
+dealDamageOnStay = true
+
+[node name="AcidTiles" type="TileMap" parent="Env/Tiles/Acid"]
+z_index = 2
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 32, 0, 0, 32, 0, 0 )
+collision_use_parent = true
+collision_layer = 8
+collision_mask = 4
+format = 1
+tile_data = PoolIntArray( 65543, 4, 0, 65544, 4, 0, 65545, 4, 0 )
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
+autoplay = true
 
 [node name="MovingPlatform" parent="." instance=ExtResource( 4 )]
 position = Vector2( -80, -64 )

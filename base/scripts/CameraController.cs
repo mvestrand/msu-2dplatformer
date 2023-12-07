@@ -9,6 +9,19 @@ public partial class CameraController : Camera2D {
 	public Node2D target = null;
 
 
+    public static CameraController GetCurrent(Viewport viewport) {
+        if (viewport == null)
+			return null;
+		var camerasGroupName = "__cameras_" + viewport.GetViewportRid().GetId();
+		var cameras = viewport.GetTree().GetNodesInGroup(camerasGroupName);
+        foreach (var camera in cameras){
+            if (camera is CameraController camController && camController.Current)
+				return camController;
+		}
+		return null;
+	}
+
+
 
 	/// <summary>
 	/// Enum to determine camera movement styles

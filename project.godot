@@ -119,6 +119,7 @@ debug_respawn={
 2d_physics/layer_7="feet"
 2d_physics/layer_8="head"
 2d_physics/layer_9="door_check"
+2d_physics/layer_10="player"
 
 [mono]
 

@@ -12,7 +12,7 @@
 [ext_resource path="res://new_curve.tres" type="Curve" id=10]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8, 10 )
+extents = Vector2( 9, 10 )
 
 [sub_resource type="RectangleShape2D" id=25]
 extents = Vector2( 9, 10 )
@@ -21,7 +21,7 @@ extents = Vector2( 9, 10 )
 extents = Vector2( 8, 1 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" groups=["player"]]
-collision_layer = 261
+collision_layer = 773
 collision_mask = 17
 script = ExtResource( 2 )
 spritePath = NodePath("AnimatedSprite")
@@ -31,7 +31,12 @@ jumpPower = 360.0
 jumpEffect = ExtResource( 3 )
 landEffect = ExtResource( 4 )
 passThroughLayers = 2
+moveMode = 3
 curve_accelCurve = ExtResource( 10 )
+adv_walkSpeed = 150.0
+adv_runSpeed = 250.0
+adv_sprintSpeed = 350.0
+adv_airMaxSpeedGain = 150.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color( 0.592157, 0, 1, 1 )

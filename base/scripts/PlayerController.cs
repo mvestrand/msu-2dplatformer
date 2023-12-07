@@ -359,14 +359,13 @@ public partial class PlayerController : KinematicBody2D {
 				acceleration = adv_sprintAccel;
 			else
     			acceleration = ( inputs.RunHeld ? adv_runAccel : adv_walkAccel );
-            
         }
         
 		float lastVelocity = Velocity.x;
 		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, acceleration * friction * delta);
 
-        if (lastVelocity != Velocity.x)
-			GD.Print(Velocity.x);
+        // if (lastVelocity != Velocity.x)
+		// 	GD.Print(Velocity.x);
 	}
 
 	/*	-> with velocity,  <- against velocity,  o neutral, (r) run button 
