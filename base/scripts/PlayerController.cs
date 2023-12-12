@@ -56,7 +56,7 @@ public partial class PlayerController : KinematicBody2D {
 	private bool Jumping {
 		get { return jumpTime > 0; }
 	}
-	private float jumpTime = 0;
+	private float jumpTime = 0.1f;
 	public Vector2 Velocity = Vector2.Zero;
 
 	public class PlayerInputs {
@@ -323,9 +323,9 @@ public partial class PlayerController : KinematicBody2D {
             targetXVelocity = inputs.Move.x * (inputs.RunHeld ? adv_runSpeed : adv_walkSpeed);
 
         // Sprint delay logic
-        if (Mathf.Abs(Velocity.x) > adv_runSpeed) { // Already at sprinting speed
+		if (Mathf.Abs(Velocity.x) > adv_runSpeed) { // Already at sprinting speed
 			adv_sprintDelayLeft = 0;
-		} else if (Mathf.Abs(Velocity.x) == adv_runSpeed) { // At running speed, count down delay
+		} else if (Mathf.Abs(Velocity.x) == adv_runSpeed && IsOnFloor()) { // At running speed, count down delay
 			adv_sprintDelayLeft -= delta;
 		} else { // Not at max speed, reset delay countdown
 			adv_sprintDelayLeft = adv_sprintStartupTime;
@@ -400,10 +400,14 @@ public partial class PlayerController : KinematicBody2D {
 	private void HandleJump(float delta) {
 		if (Jumping) {
 			jumpTime -= delta;
+			if (!inputs.JumpHeld) { // End jump if jump button is released
+				jumpTime = 0;
+			}
 		}
 		if (inputs.JumpPressed) {
 			TryJump();
 		}
+		GD.Print(Velocity);
 
 	}
 
@@ -418,8 +422,10 @@ public partial class PlayerController : KinematicBody2D {
 	/// <returns>IEnumerator: makes coroutine possible</returns>
 	private void TryJump(float powerMultiplier = 1.0f) {
 		bool freeJump = HasFreeJump();
-		if ((timesJumped < allowedJumps || freeJump) && state != PlayerState.Dead) {
+		if (!Jumping && (timesJumped < allowedJumps || freeJump) && state != PlayerState.Dead) {
 			float new_y = -jumpPower * powerMultiplier;
+			if (Velocity.y < 2*new_y) // Can't jump if already moving up very quickly
+				return;
 			jumpTime = jumpDuration;
 			SpawnEffect(jumpEffect);
 			Velocity.y = new_y;

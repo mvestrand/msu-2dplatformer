@@ -28,10 +28,10 @@ patch_margin_right = 14
 patch_margin_bottom = 18
 
 [node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer"]
-margin_left = 12.0
-margin_top = 30.0
-margin_right = 88.0
-margin_bottom = 70.0
+margin_left = 14.0
+margin_top = 32.0
+margin_right = 86.0
+margin_bottom = 68.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
@@ -39,8 +39,8 @@ size_flags_vertical = 6
 custom_constants/vseparation = 4
 
 [node name="Button" type="Button" parent="MarginContainer/HFlowContainer"]
-margin_right = 76.0
-margin_bottom = 24.0
+margin_right = 72.0
+margin_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_pivot_offset = Vector2( 25, 15 )
@@ -59,9 +59,9 @@ custom_styles/normal = ExtResource( 6 )
 text = "New Game"
 
 [node name="TextureButton2" type="TextureButton" parent="MarginContainer/HFlowContainer"]
-margin_top = 28.0
+margin_top = 24.0
 margin_right = 50.0
-margin_bottom = 40.0
+margin_bottom = 36.0
 texture_normal = ExtResource( 1 )
 texture_pressed = ExtResource( 2 )
 texture_hover = ExtResource( 2 )

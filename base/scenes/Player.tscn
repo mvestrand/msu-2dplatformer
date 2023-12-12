@@ -33,10 +33,7 @@ landEffect = ExtResource( 4 )
 passThroughLayers = 2
 moveMode = 3
 curve_accelCurve = ExtResource( 10 )
-adv_walkSpeed = 150.0
-adv_runSpeed = 250.0
-adv_sprintSpeed = 350.0
-adv_airMaxSpeedGain = 150.0
+adv_sprintAccel = 400.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color( 0.592157, 0, 1, 1 )
