@@ -316,6 +316,7 @@ centered = false
 offset = Vector2( -30, -48 )
 
 [node name="Head" type="CollisionShape2D" parent="."]
+visible = false
 modulate = Color( 1, 0, 1, 1 )
 position = Vector2( -4, -36.5 )
 z_index = 4
@@ -328,6 +329,7 @@ centered = false
 offset = Vector2( -30, -48 )
 
 [node name="Blocker" type="CollisionShape2D" parent="."]
+visible = false
 modulate = Color( 1, 0, 1, 1 )
 position = Vector2( 3.5, -16.5 )
 z_index = 4
@@ -350,6 +352,7 @@ input_pickable = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ActivationZone"]
+visible = false
 modulate = Color( 0.501961, 0.486275, 0.117647, 1 )
 position = Vector2( 3.5, -20 )
 shape = SubResource( 19 )
@@ -371,6 +374,7 @@ collision_mask = 256
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HoldZone"]
+visible = false
 modulate = Color( 0.0313726, 1, 0, 0.490196 )
 position = Vector2( 4, -20 )
 z_index = -6
