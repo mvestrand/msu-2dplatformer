@@ -21,7 +21,6 @@ script = ExtResource( 1 )
 teamId = 1
 damageAmount = 2
 destroyAfterDamage = true
-dealDamageOnEnter = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )

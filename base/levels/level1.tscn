@@ -2,15 +2,15 @@
 
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://base/scenes/StaticPlatform.tscn" type="PackedScene" id=3]
-[ext_resource path="res://base/scenes/MovingPlatform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://base/scenes/env/StaticPlatform.tscn" type="PackedScene" id=3]
+[ext_resource path="res://base/scenes/env/MovingPlatform.tscn" type="PackedScene" id=4]
 [ext_resource path="res://base/art/environment/Platforms.png" type="Texture" id=5]
-[ext_resource path="res://base/scenes/Door.tscn" type="PackedScene" id=6]
+[ext_resource path="res://base/scenes/env/OldDoor.tscn" type="PackedScene" id=6]
 [ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
-[ext_resource path="res://base/scenes/Checkpoint.tscn" type="PackedScene" id=8]
-[ext_resource path="res://base/scenes/ScorePickup.tscn" type="PackedScene" id=9]
-[ext_resource path="res://base/scenes/HealthPickup.tscn" type="PackedScene" id=10]
-[ext_resource path="res://base/scenes/BasicEnemy.tscn" type="PackedScene" id=11]
+[ext_resource path="res://base/scenes/env/Checkpoint.tscn" type="PackedScene" id=8]
+[ext_resource path="res://base/scenes/pickup/ScorePickup.tscn" type="PackedScene" id=9]
+[ext_resource path="res://base/scenes/pickup/HealthPickup.tscn" type="PackedScene" id=10]
+[ext_resource path="res://base/scenes/enemy/BasicEnemy.tscn" type="PackedScene" id=11]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Platforms.png 0"

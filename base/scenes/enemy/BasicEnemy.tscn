@@ -120,7 +120,6 @@ shape = SubResource( 21 )
 [node name="Health" type="Node" parent="."]
 script = ExtResource( 3 )
 teamId = 1
-_hp = 3
 invincibleTimeOnHit = 0.0
 deathEffect = ExtResource( 7 )
 hitEffect = ExtResource( 8 )
