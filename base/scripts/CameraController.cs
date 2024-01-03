@@ -26,16 +26,17 @@ public partial class CameraController : Camera2D {
 	/// <summary>
 	/// Enum to determine camera movement styles
 	/// </summary>
-	public enum CameraStyles {
+	public enum CameraStyle {
 		Locked,
 		Overhead,
 		DistanceFollow,
 		OffsetFollow,
 		LerpFollow,
-		BetweenTargetAndMouse
+		BetweenTargetAndMouse,
+        FancyCam
 	}
 
-	[Export] public CameraStyles cameraMovementStyle = CameraStyles.Locked;
+	[Export] public CameraStyle cameraMovementStyle = CameraStyle.Locked;
 	[Export] public float maxDistanceFromTarget = 100.0f;
 	[Export] public Vector2 cameraOffset = Vector2.Zero;
 	[Export] public float mouseTracking = 0.5f;
@@ -46,6 +47,14 @@ public partial class CameraController : Camera2D {
 	private Vector2 actualPosition = Vector2.Zero;
 
 	private WeakReference<ShaderMaterial> subpixelShaderMat;
+
+
+	#region FancyCam Variables
+	[Export] public Vector2 fc_deadzone = Vector2.Zero;
+
+
+	#endregion
+
 
 
 	public override void _Ready() {
@@ -166,26 +175,29 @@ public partial class CameraController : Camera2D {
 	public Vector2 ComputeCameraPosition(Vector2 targetPosition, Vector2 mousePosition, float delta) {
 		Vector2 result = Vector2.Zero;
 		switch (cameraMovementStyle) {
-			case CameraStyles.Locked:
+			case CameraStyle.Locked:
 				result = GetPos();
 				break;
-			case CameraStyles.Overhead:
+			case CameraStyle.Overhead:
 				result = targetPosition;
 				break;
-			case CameraStyles.DistanceFollow:
+			case CameraStyle.DistanceFollow:
 				result = targetPosition + ( GetPos() - targetPosition ).LimitLength(maxDistanceFromTarget);
 				break;
-			case CameraStyles.OffsetFollow:
+			case CameraStyle.OffsetFollow:
 				result = targetPosition + cameraOffset;
 				break;
-			case CameraStyles.LerpFollow:
+			case CameraStyle.LerpFollow:
 				result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
 				break;
-			case CameraStyles.BetweenTargetAndMouse:
+			case CameraStyle.BetweenTargetAndMouse:
 				Vector2 desiredPosition = targetPosition.LinearInterpolate(mousePosition, mouseTracking);
 				Vector2 difference = desiredPosition - targetPosition;
 				difference = difference.LimitLength(maxDistanceFromTarget);
 				result = targetPosition + difference;
+				break;
+            case CameraStyle.FancyCam:
+
 				break;
 		}
 		return result;
