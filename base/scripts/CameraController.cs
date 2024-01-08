@@ -197,7 +197,7 @@ public partial class CameraController : Camera2D {
 				result = targetPosition + difference;
 				break;
             case CameraStyle.FancyCam:
-
+				result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
 				break;
 		}
 		return result;
