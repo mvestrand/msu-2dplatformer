@@ -3,6 +3,69 @@ using System.Collections;
 using System.Collections.Generic;
 using Godot;
 
+/** @todo
+Convert JumpPower to a system of equations with
+T = JumpTime
+J = JumpImpulse
+H = JumpHeight
+
+Given a JumpTime T:
+    J = g * (T / 2)
+    H = (1/2) * g * (T / 2)^2   = (1/8) * g * T^2
+
+Given a JumpImpulse J:
+    T = 2 * (J / G)
+    H = (1/2) * g * (T / 2)^2   = (1/8) * g * T^2
+
+Given a JumpHeight H:
+    T = 2 * sqrt(2 * H / g)
+    J = g * (T / 2)
+
+Move speed system of equations with
+        Accel   MaxSpeed    Time    Run-up Dist.
+Walk    Aw      Vw          Tw      Dw
+Run     Ar      Vr          Tr      Dr
+Sprint  As      Vs          Ts      Ds
+
+Walk & Run (assume max speed v is always given)
+Given acceleration a:
+    t = v / a
+    d = (1/2) * v^2 / a
+
+Given run-up time t:
+    a = v / t
+    d = (1/2) * v * t
+
+Given run-up distance d:
+    t = 2 * d / v
+    a = (1/2) * v^2 / d
+
+Sprint (given max speed Vs):
+Given acceleration As:
+    Ts = (Vs - Vr) / As
+    Ds = Vr * Ts + (1/2) * As * Ts^2
+
+Given sprint time to max speed Ts:
+    As = (Vs - Vr) / Ts
+    Ds = Vr * Ts + (1/2) * (Vs - Vr) * Ts =     (1/2) * (Vs + Vr) * Ts
+
+Total sprint windup time and distance:
+    Ttotal = Tr + Td + Ts
+    Dtotal = Dr + Vr * Td + Ds
+
+
+Jump distance equations:
+
+DWalk = walking per jump distance
+DRun = Running per jump distance
+DSprint = Sprinting per jump distance
+
+    DWalk = WalkSpeed * T
+    DRun = RunSpeed * T
+    DSprint = SprintSpeed * T
+
+
+**/
 public enum Facing2D {
 	Right,
 	Left
@@ -37,7 +100,6 @@ public partial class PlayerController : KinematicBody2D {
 	}
 
 	[Export] public float gravity = (int)ProjectSettings.GetSetting("physics/2d/default_gravity");
-
 	[Export] public float jumpPower = 500.0f;
 	[Export] public float maxFallSpeed = 1000f;
 	[Export] public float coyoteTime = 0.2f;
@@ -47,6 +109,7 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] public PackedScene jumpEffect = null;
 	[Export] public PackedScene landEffect = null;
 	[Export(PropertyHint.Layers2dPhysics)] public uint passThroughLayers;
+	[Export] public float animRunSpeed = 200f;
 
 	// [Export] public List<string> passThroughLayers = new List<string>();
 
@@ -142,6 +205,7 @@ public partial class PlayerController : KinematicBody2D {
 		LandingCheck();
 		DetermineState();
 		UpdateSpriteDirection();
+		UpdateAnimationSpeed();
 #if DEBUG
 		HandleDebugInputs();
 #endif
@@ -315,6 +379,10 @@ public partial class PlayerController : KinematicBody2D {
 	[Export] float adv_walkReduce = 600;
 	[Export] float adv_runReduce = 600;
 	[Export] float adv_airMaxSpeedGain = 200;
+	[Export] bool adv_canSprint = true;
+	[Export] float adv_changeDirMult = 1.5f;
+	[Export] float adv_brakeMult = 1.5f;
+
 	float adv_sprintDelayLeft = 0;
 	//bool adv_isSkidding = false;
 	private void AdvMove(float delta) {
@@ -331,8 +399,9 @@ public partial class PlayerController : KinematicBody2D {
 			adv_sprintDelayLeft = adv_sprintStartupTime;
 		}
 
-		bool isSprinting = adv_sprintDelayLeft <= 0 && Mathf.Sign(inputs.Move.x) == Mathf.Sign(Velocity.x) && inputs.RunHeld;
-        if (isSprinting) {
+
+		bool isSprinting = adv_canSprint && adv_sprintDelayLeft <= 0 && Mathf.Sign(inputs.Move.x) == Mathf.Sign(Velocity.x) && inputs.RunHeld;
+		if (isSprinting) {
 			targetXVelocity = inputs.Move.x * adv_sprintSpeed;
 		}
 
@@ -360,7 +429,11 @@ public partial class PlayerController : KinematicBody2D {
 			else
     			acceleration = ( inputs.RunHeld ? adv_runAccel : adv_walkAccel );
         }
-        
+        if (Mathf.Abs(targetXVelocity) == 0)
+			acceleration *= adv_brakeMult;
+        else if (Mathf.Sign(Velocity.x) != Mathf.Sign(targetXVelocity))
+			acceleration *= adv_changeDirMult;
+
 		float lastVelocity = Velocity.x;
 		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, acceleration * friction * delta);
 
@@ -538,21 +611,36 @@ public partial class PlayerController : KinematicBody2D {
 	private void PlayStateAnimation() {
 		switch (state) {
 			case PlayerState.Idle:
+				sprite.SpeedScale = 1;
 				sprite.Play("idle");
 				break;
 			case PlayerState.Walk:
 				sprite.Play("walk");
 				break;
 			case PlayerState.Jump:
+				sprite.SpeedScale = 1;
 				sprite.Play("jump");
 				break;
 			case PlayerState.Dead:
+				sprite.SpeedScale = 1;
 				sprite.Play("dead");
 				break;
 			case PlayerState.Fall:
+				sprite.SpeedScale = 1;
 				sprite.Play("jump");
 				break;
 		}
 	}
+    
+    private void UpdateAnimationSpeed() {
+        switch (state) {
+            case PlayerState.Walk:
+ 				sprite.SpeedScale = Mathf.Abs(Velocity.x / animRunSpeed);
+				break;
+			default:
+				sprite.SpeedScale = 1;
+				break;
+		}
+    }
 
 }

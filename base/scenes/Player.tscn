@@ -24,6 +24,9 @@ extents = Vector2( 8, 1 )
 collision_layer = 773
 collision_mask = 17
 script = ExtResource( 2 )
+__meta__ = {
+"_editor_description_": ""
+}
 spritePath = NodePath("AnimatedSprite")
 healthPath = NodePath("Health")
 killboxPath = NodePath("")
@@ -33,7 +36,18 @@ landEffect = ExtResource( 4 )
 passThroughLayers = 2
 moveMode = 3
 curve_accelCurve = ExtResource( 10 )
-adv_sprintAccel = 400.0
+adv_walkSpeed = 150.0
+adv_runSpeed = 250.0
+adv_sprintSpeed = 300.0
+adv_sprintAccel = 150.0
+adv_sprintReduce = 75.0
+adv_sprintStartupTime = 0.5
+adv_walkAccel = 500.0
+adv_runAccel = 500.0
+adv_walkReduce = 450.0
+adv_runReduce = 450.0
+adv_airMaxSpeedGain = 150.0
+adv_canSprint = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color( 0.592157, 0, 1, 1 )
@@ -45,8 +59,6 @@ frames = ExtResource( 1 )
 animation = "idle"
 centered = false
 offset = Vector2( -16, -22 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource( 5 )
