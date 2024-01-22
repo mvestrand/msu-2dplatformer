@@ -356,7 +356,7 @@ public partial class PlayerController : KinematicBody2D {
 		//GD.Print(velDiff);
 		float force = curve_accelScaling * curve_accelCurve.Interpolate(Mathf.Abs(velDiff) / curve_velDiffScaling);
 		Velocity.x = Mathf.MoveToward(Velocity.x, targetXVelocity, force*delta);
-		GD.Print(Mathf.Abs(velDiff) / curve_velDiffScaling);
+		//GD.Print(Mathf.Abs(velDiff) / curve_velDiffScaling);
 
 		// if (Mathf.IsEqualApprox(targetXVelocity, 0, 0.01f)) {
 		// 	// float frictionForce = Mathf.Min(Mathf.Abs(Velocity.x), exp_friction);
@@ -480,7 +480,7 @@ public partial class PlayerController : KinematicBody2D {
 		if (inputs.JumpPressed) {
 			TryJump();
 		}
-		GD.Print(Velocity);
+		//GD.Print(Velocity);
 
 	}
 

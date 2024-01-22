@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Godot;
 
 /// <summary>
@@ -40,25 +41,125 @@ public partial class CameraController : Camera2D {
 	[Export] public float maxDistanceFromTarget = 100.0f;
 	[Export] public Vector2 cameraOffset = Vector2.Zero;
 	[Export] public float mouseTracking = 0.5f;
-	[Export] public float camFollowSpeed = 1f;
+	[Export] public float dampLambda = 0.5f;
 	[Export] public bool tryUseSubpixelCamera = false;
 
 	private bool useSubpixelCamera = false;
 	private Vector2 actualPosition = Vector2.Zero;
+	private List<NodePath> camConstraints = new List<NodePath>();
 
 	private WeakReference<ShaderMaterial> subpixelShaderMat;
 
 
 	#region FancyCam Variables
 	[Export] public Vector2 fc_deadzone = Vector2.Zero;
+	[Export] public bool fc_useMinSpeed = false;
+	[Export] public bool fc_useMaxSpeed = false;
+	[Export] public float fc_dampMinSpeed = 10;
+	[Export] public float fc_dampMaxSpeed = 10;
+	[Export] public float fc_lookahead = 1;
 
+	Vector2 lastFramePlayerOffset = Vector2.Zero;
+
+	private RayCast2D _yPositiveRay;
+	private RayCast2D _yNegativeRay;
+	private RayCast2D _xPositiveRay;
+	private RayCast2D _xNegativeRay;
 
 	#endregion
 
+	public void AddConstraint(CameraArea area) {
+        if (area.IsInsideTree()) {
+			camConstraints.Add(area.GetPath());
+		}
+    }
 
+    public void RemoveConstraint(CameraArea area) {
+		var path = area.GetPath();
+		var wasremoved = camConstraints.RemoveAll(x => x.ToString() == path.ToString());
+		GD.Print(wasremoved);
+	}
+
+    public Vector2 ApplyConstraints(Vector2 camPos) {
+		var constrainedPos = camPos;
+
+		for (int i = camConstraints.Count - 1; i >= 0; i--) {
+			var constraint = GetNodeOrNull<CameraArea>(camConstraints[i]);
+			if (constraint != null) {
+				constrainedPos = constraint.ApplyConstraint(constrainedPos);
+			}
+            else {
+				camConstraints.RemoveAt(i);
+			}
+		}
+		return constrainedPos;
+	}
+
+    private void ConstrainCamera() {
+		Vector2 viewSize = Zoom * (GetViewportRect().Size / 2);
+		Vector2 offset = Vector2.Zero;
+		float wallDistance = 0;
+		if (_yPositiveRay != null) {
+			_yPositiveRay.ForceRaycastUpdate();
+            if (_yPositiveRay.IsColliding()) {
+
+				wallDistance = _yPositiveRay.GetCollisionPoint().y - GlobalPosition.y;
+                if (wallDistance < viewSize.y) {
+    				offset.y = wallDistance - viewSize.y;
+                }
+			}
+        }
+		if (_yNegativeRay != null) {
+			_yNegativeRay.ForceRaycastUpdate();
+            if (_yNegativeRay.IsColliding()) {
+
+				wallDistance = -(_yNegativeRay.GetCollisionPoint().y - GlobalPosition.y);
+                if (wallDistance < viewSize.y) {
+                    if (offset.y == 0)
+        				offset.y = - (wallDistance - viewSize.y);
+                    else
+        				offset.y = (offset.y - (wallDistance - viewSize.y))/2f;
+                }
+			}
+        }
+
+		if (_xPositiveRay != null) {
+			_xPositiveRay.ForceRaycastUpdate();
+            if (_xPositiveRay.IsColliding()) {
+
+				wallDistance = _xPositiveRay.GetCollisionPoint().x - GlobalPosition.x;
+                if (wallDistance < viewSize.x) {
+    				offset.x = wallDistance - viewSize.x;
+                }
+			}
+        }
+		if (_xNegativeRay != null) {
+			_xNegativeRay.ForceRaycastUpdate();
+            if (_xNegativeRay.IsColliding()) {
+
+				wallDistance = -(_xNegativeRay.GetCollisionPoint().x - GlobalPosition.x);
+                if (wallDistance < viewSize.x) {
+                    if (offset.x == 0)
+        				offset.x = - (wallDistance - viewSize.x);
+                    else
+        				offset.x = (offset.x - (wallDistance - viewSize.x))/2f;
+                }
+			}
+        }
+
+		GlobalPosition += offset;
+	}
+
+    private Vector2 Damp(Vector2 start, Vector2 target, float lambda, float dt) {
+		return start.LinearInterpolate(target, 1 - Mathf.Exp(-lambda * dt));
+	}
 
 	public override void _Ready() {
 		target = GetNode<Node2D>(targetPath);
+		_yPositiveRay = GetNodeOrNull<RayCast2D>("Ypos");
+		_yNegativeRay = GetNodeOrNull<RayCast2D>("Yneg");
+		_xPositiveRay = GetNodeOrNull<RayCast2D>("Xpos");
+		_xNegativeRay = GetNodeOrNull<RayCast2D>("Xneg");
 		if (tryUseSubpixelCamera)
 			SetupSubpixelCamera();
 	}
@@ -127,9 +228,10 @@ public partial class CameraController : Camera2D {
 			Vector2 targetPosition = GetTargetPosition();
 			Vector2 mousePosition = GetPlayerMousePosition();
 			Vector2 desiredCameraPosition = ComputeCameraPosition(targetPosition, mousePosition, delta);
-
+            
 			SetPos(desiredCameraPosition);
 		}
+		ConstrainCamera();
 	}
 
 	/// <summary>
@@ -142,7 +244,7 @@ public partial class CameraController : Camera2D {
 	/// </summary>
 	/// <returns>Vector3: The position of the target assigned to this camera controller.</returns>
 	public Vector2 GetTargetPosition() {
-		if (target != null) {
+        if (target != null) {
 			return target.GlobalPosition;
 		}
 		return GetPos();
@@ -188,7 +290,7 @@ public partial class CameraController : Camera2D {
 				result = targetPosition + cameraOffset;
 				break;
 			case CameraStyle.LerpFollow:
-				result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
+				result = Damp(GetPos(), targetPosition, dampLambda, delta);
 				break;
 			case CameraStyle.BetweenTargetAndMouse:
 				Vector2 desiredPosition = targetPosition.LinearInterpolate(mousePosition, mouseTracking);
@@ -197,7 +299,37 @@ public partial class CameraController : Camera2D {
 				result = targetPosition + difference;
 				break;
             case CameraStyle.FancyCam:
-				result = GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
+				var currentPosition = GetPos();
+                if ((targetPosition - currentPosition).Length() <= 0.0001) { 
+                    result = targetPosition;
+					break;
+				}
+				var dampedPosition = Damp(currentPosition, targetPosition, dampLambda, delta);
+				var deltaPos = dampedPosition - currentPosition;     
+				if (fc_useMinSpeed) {
+
+                    // Instantly reach target if sufficiently close
+                    if ((targetPosition - currentPosition).Length() <= fc_dampMinSpeed*delta) {
+						//GD.Print("Target reached");
+						result = targetPosition;
+    					break;
+                    } else if (deltaPos.Length() < fc_dampMinSpeed*delta){
+						//GD.Print(deltaPos.Length());
+    					deltaPos = deltaPos.Normalized() * fc_dampMinSpeed*delta; 
+                    }
+
+				}
+				if (fc_useMaxSpeed) {
+					deltaPos = deltaPos.LimitLength(Mathf.Abs(fc_dampMaxSpeed));
+				}
+				result = currentPosition + deltaPos;
+				var currentFramePlayerOffset = result - GetTargetPosition();
+				var framePlayerShift = currentFramePlayerOffset - lastFramePlayerOffset;
+				lastFramePlayerOffset = currentFramePlayerOffset;
+				GD.Print(framePlayerShift);
+
+				//GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
+
 				break;
 		}
 		return result;
