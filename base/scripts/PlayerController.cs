@@ -242,6 +242,9 @@ public partial class PlayerController : KinematicBody2D {
 		}
 	}
 
+    private void GetLandingMaterial() {
+        
+    }
 
     // [Export] public float moveSpeed = 200;
 	// [Export] public float moveAccel = 200;

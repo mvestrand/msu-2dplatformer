@@ -71,7 +71,7 @@ public partial class Damage : Area2D {
 		if (target.TeamId != teamId) {
 			var outcome = target.TakeDamage(damageAmount);
 			if (outcome != TakeDamageOutcome.Ignored) {
-				GD.Print("dmg dealt");
+				//GD.Print("dmg dealt");
 				EmitSignal(nameof(DamageDealt), target as Node, outcome);
 			}
 			if (outcome != TakeDamageOutcome.Ignored && destroyAfterDamage) {

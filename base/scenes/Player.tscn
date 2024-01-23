@@ -48,6 +48,8 @@ adv_walkReduce = 450.0
 adv_runReduce = 450.0
 adv_airMaxSpeedGain = 150.0
 adv_canSprint = false
+adv_changeDirMult = 2.0
+adv_brakeMult = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color( 0.592157, 0, 1, 1 )

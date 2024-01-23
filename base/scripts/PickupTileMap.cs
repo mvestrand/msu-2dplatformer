@@ -21,7 +21,7 @@ public class PickupTileMap : TileMap
 			var cell = GetCellv(cellpos);
             if (cell == (int)PickupType.Score) {
 				var pickup = scorePickup.Instance<Node2D>();
-				pickup.Position = MapToWorld(cellpos); // * Scale?
+				pickup.Position = MapToWorld(cellpos) + new Vector2(8,8); // * Scale?
 				AddChild(pickup);
 				SetCellv(cellpos, (int)PickupType.Empty);
 			}

@@ -132,7 +132,7 @@ script = ExtResource( 5 )
 healthPath = NodePath("../Health")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Head"]
-polygon = PoolVector2Array( 12, -19, 3, -31, -3, -31, -12, -19 )
+polygon = PoolVector2Array( 11, -20, 3, -31, -3, -31, -11, -20, -11, -16, 11, -16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/idle = SubResource( 22 )
