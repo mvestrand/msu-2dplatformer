@@ -1,34 +1,43 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://base/art/environment/Platforms.png" type="Texture" id=1]
+[ext_resource path="res://base/scripts/Waypoint.cs" type="Script" id=2]
+[ext_resource path="res://base/scripts/MovingPlatform.cs" type="Script" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 48, 2 )
 
-[sub_resource type="Animation" id=2]
-resource_name = "horizontal"
-length = 4.0
-loop = true
-step = 1.0
-tracks/0/type = "value"
-tracks/0/path = NodePath("Platform:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 2, 4 ),
-"transitions": PoolRealArray( -2, -2, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 128, 0 ), Vector2( 0, 0 ) ]
-}
-
 [node name="MovingPlatform" type="Node2D"]
 
+[node name="Waypoints" type="Node2D" parent="."]
+
+[node name="Waypoint1" type="Node2D" parent="Waypoints"]
+script = ExtResource( 2 )
+
+[node name="Waypoint2" type="Node2D" parent="Waypoints"]
+position = Vector2( 128, 0 )
+script = ExtResource( 2 )
+
+[node name="Waypoint3" type="Node2D" parent="Waypoints"]
+position = Vector2( 128, 0 )
+script = ExtResource( 2 )
+
+[node name="Waypoint4" type="Node2D" parent="Waypoints"]
+position = Vector2( 128, 0 )
+script = ExtResource( 2 )
+
+[node name="Waypoint5" type="Node2D" parent="Waypoints"]
+position = Vector2( 128, 0 )
+script = ExtResource( 2 )
+
 [node name="Platform" type="KinematicBody2D" parent="."]
+position = Vector2( 104, -8 )
 collision_layer = 2
 collision_mask = 0
 motion/sync_to_physics = true
+script = ExtResource( 3 )
+waypointsPath = NodePath("../Waypoints")
+usedWaypoints = 2
 
 [node name="Sprite" type="Sprite" parent="Platform"]
 texture = ExtResource( 1 )
@@ -41,7 +50,3 @@ region_rect = Rect2( 0, 128, 96, 32 )
 position = Vector2( 0, 2 )
 shape = SubResource( 1 )
 one_way_collision = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "horizontal"
-anims/horizontal = SubResource( 2 )
