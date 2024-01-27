@@ -326,7 +326,7 @@ public partial class CameraController : Camera2D {
 				var currentFramePlayerOffset = result - GetTargetPosition();
 				var framePlayerShift = currentFramePlayerOffset - lastFramePlayerOffset;
 				lastFramePlayerOffset = currentFramePlayerOffset;
-				GD.Print(framePlayerShift);
+				//GD.Print(framePlayerShift);
 
 				//GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
 
@@ -334,4 +334,6 @@ public partial class CameraController : Camera2D {
 		}
 		return result;
 	}
+
+
 }

@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://base/scripts/CameraRoot.cs" type="Script" id=1]
+[ext_resource path="res://base/art/dev/outlined_square.png" type="Texture" id=2]
+
+[node name="CameraRoot" type="Node2D"]
+process_priority = 10
+z_index = 100
+script = ExtResource( 1 )
+lookaheadOffset = 64
+camera = NodePath("Camera2D")
+indicatorPath = NodePath("Goal")
+dragIndicatorPath = NodePath("PredragGoal")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.5, 0.5 )
+smoothing_speed = 10.0
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="Goal" type="Sprite" parent="."]
+modulate = Color( 0.223529, 0.337255, 0.682353, 1 )
+z_index = 98
+texture = ExtResource( 2 )
+
+[node name="PredragGoal" type="Sprite" parent="."]
+z_index = 96
+texture = ExtResource( 2 )
