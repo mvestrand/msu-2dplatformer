@@ -1,10 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://base/scenes/enemy/BasicEnemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://base/art/animation/SmartEnemyFrames.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://base/scenes/effects/enemy/SmartEnemyDieFX.tscn" type="PackedScene" id=3]
 
 [node name="Enemy" instance=ExtResource( 1 )]
 willTurnAroundAtEdge = true
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = ExtResource( 2 )
+
+[node name="Health" parent="." index="5"]
+deathEffect = ExtResource( 3 )
