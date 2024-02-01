@@ -1,9 +1,8 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://base/scenes/env/Checkpoint.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
-[ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=4]
 [ext_resource path="res://base/scripts/Damage.cs" type="Script" id=5]
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=6]
 [ext_resource path="res://base/tilesets/details.tres" type="TileSet" id=7]
@@ -19,9 +18,13 @@
 [ext_resource path="res://base/tilesets/pickups.tres" type="TileSet" id=17]
 [ext_resource path="res://base/scripts/PickupTileMap.cs" type="Script" id=18]
 [ext_resource path="res://base/scenes/Camera.tscn" type="PackedScene" id=19]
+[ext_resource path="res://base/scripts/camera/CameraRoom.cs" type="Script" id=21]
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 480, 16 )
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 432, 200 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 432, 200 )
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 831, 52 )
@@ -35,7 +38,8 @@ __meta__ = {
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 640, -152 )
 
-[node name="CameraRoot" parent="." instance=ExtResource( 19 )]
+[node name="CameraRig" parent="." instance=ExtResource( 19 )]
+DebugDraw = true
 targetPath = NodePath("../Player")
 lookaheadOffset = 32
 dragMargin = Vector2( 64, 32 )
@@ -43,76 +47,42 @@ maxDragOffset = Vector2( 160, 0 )
 groundYUnlockMargin = 64.0
 airYUnlockMargin = 176.0
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 640, -152 )
-zoom = Vector2( 0.5, 0.5 )
-process_mode = 0
-smoothing_enabled = true
-editor_draw_limits = true
-script = ExtResource( 4 )
-targetPath = NodePath("../Player")
-cameraMovementStyle = 6
-maxDistanceFromTarget = 200.0
-dampLambda = 8.15
-fc_useMinSpeed = true
-fc_dampMinSpeed = 50.0
-fc_lookahead = 0.0
-
-[node name="Ypos" type="RayCast2D" parent="Camera2D"]
-enabled = true
-cast_to = Vector2( 0, 240 )
-collision_mask = 2048
-collide_with_areas = true
-collide_with_bodies = false
-
-[node name="Xpos" type="RayCast2D" parent="Camera2D"]
-rotation = -1.5708
-enabled = true
-cast_to = Vector2( 0, 400 )
-collision_mask = 8192
-collide_with_areas = true
-collide_with_bodies = false
-
-[node name="Xneg" type="RayCast2D" parent="Camera2D"]
-rotation = 1.5708
-enabled = true
-cast_to = Vector2( 0, 400 )
-collision_mask = 16384
-collide_with_areas = true
-collide_with_bodies = false
-
-[node name="Yneg" type="RayCast2D" parent="Camera2D"]
-rotation = 3.14159
-enabled = true
-cast_to = Vector2( 0, 240 )
-collision_mask = 4096
-collide_with_areas = true
-collide_with_bodies = false
-
 [node name="CamZones" type="Node2D" parent="."]
+visible = false
 
-[node name="YPosBounds" type="Area2D" parent="CamZones"]
-collision_layer = 6144
-collision_mask = 0
-monitoring = false
+[node name="CameraRoom" type="Area2D" parent="CamZones"]
+z_index = 200
+collision_layer = 2048
+collision_mask = 512
+script = ExtResource( 21 )
+camRootPath = NodePath("../../CameraRig")
+marginLeft = 0.3
+marginTop = 0.3
+marginBottom = 0.3
+marginRight = 0.3
+clamp = true
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CamZones/YPosBounds"]
-modulate = Color( 0.94902, 0, 0, 1 )
-z_index = 6
-build_mode = 1
-polygon = PoolVector2Array( 960, 32, 1224, 160, 1360, 304, 1528, 304, 1600, 240, 2224, 240, 2336, 176, 2832, 176, 2832, 0, 3072, 0, 3128, -256, 5112, -256, 5112, 384, 3072, 384, -64, 384, -64, 32 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CamZones/CameraRoom"]
+position = Vector2( 400, -136 )
+shape = SubResource( 5 )
+disabled = true
 
-[node name="XBounds" type="Area2D" parent="CamZones"]
-collision_layer = 24576
-collision_mask = 0
-monitoring = false
+[node name="CameraRoom2" type="Area2D" parent="CamZones"]
+z_index = 200
+collision_layer = 2048
+collision_mask = 512
+script = ExtResource( 21 )
+camRootPath = NodePath("../../CameraRig")
+marginLeft = 0.3
+marginTop = 0.3
+marginBottom = 0.3
+marginRight = 0.3
+clamp = true
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="CamZones/XBounds"]
-modulate = Color( 0.803922, 0.101961, 0.101961, 1 )
-position = Vector2( -40, -416 )
-rotation = 1.5708
-z_index = 10
-shape = SubResource( 3 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CamZones/CameraRoom2"]
+position = Vector2( 1232, -136 )
+shape = SubResource( 6 )
+disabled = true
 
 [node name="Env" type="Node2D" parent="."]
 position = Vector2( 0, -1504 )

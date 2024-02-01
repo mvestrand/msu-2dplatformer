@@ -1,18 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://base/scripts/camera/CameraRig.cs" type="Script" id=1]
 [ext_resource path="res://base/art/dev/outlined_square.png" type="Texture" id=2]
 
-[node name="CameraRoot" type="Node2D"]
+[node name="CameraRig" type="Node2D"]
 process_priority = 10
 z_index = 100
-script = ExtResource( 1 )
-lookaheadOffset = 64
-camPath = NodePath("Camera2D")
-indicatorPath = NodePath("Goal")
-dragIndicatorPath = NodePath("PredragGoal")
-groundLockPath = NodePath("GroundLock")
-preConstrainPath = NodePath("PreConstrain")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

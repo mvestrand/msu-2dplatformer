@@ -77,6 +77,8 @@ public enum Facing2D {
 public partial class PlayerController : KinematicBody2D {
 
 	//public GroundCheck groundCheck = null;
+	[Export] public NodePath cameraPath;
+    
 	[Export] public NodePath spritePath;
 	public AnimatedSprite sprite;
 	[Export] public NodePath healthPath;
@@ -233,6 +235,7 @@ public partial class PlayerController : KinematicBody2D {
 	private float fallSpeed = 0;
 	private void LandingCheck() {
 		if (IsOnFloor()) {
+            
 			if (fallSpeed > LandEffectMinSpeed) {
 				SpawnEffect(landEffect);
 			}
@@ -245,48 +248,6 @@ public partial class PlayerController : KinematicBody2D {
     private void GetLandingMaterial() {
         
     }
-
-    // [Export] public float moveSpeed = 200;
-	// [Export] public float moveAccel = 200;
-	// [Export] public float moveDecel = 200;
-	// [Export] public float moveExponent = 2.2f;
-	// // [Export] public float walkSpeed = 200;
-	// // [Export] public float runSpeed = 350;
-	// // [Export] public float sprintSpeed = 500;
-	// // [Export] public float airMaxAccelSpeed = 200;
-
-	// [Export] public float groundFriction = 500;
-	// [Export] public float airFriction = 20;
-	// [Export] public float storeVelocityTime = 0.1f;
-	// [Export] public float minSpeed = 10f;
-
-	// private void HandleMovementInputA(float delta) {
-	// 	if (Mathf.Abs(moveInput.x) > 0 && state != PlayerState.Dead) {
-	// 		if (moveAccel > 0) {
-	// 			if (Mathf.Sign(moveInput.x) != Mathf.Sign(Velocity.x)) {
-	// 				ApplyFriction(delta);
-	// 			}
-	// 			if (Mathf.Abs(Velocity.x) < minSpeed)
-	// 				Velocity.x = Mathf.Sign(moveInput.x) * minSpeed;
-	// 			Velocity.x += moveAccel * moveInput.x * delta;
-	// 			Velocity.x = Mathf.Clamp(Velocity.x, -walkSpeed, walkSpeed);
-	// 			sprite.FlipH = moveInput.x < 0;
-	// 		} else {
-	// 			Velocity.x = walkSpeed * moveInput.x;
-	// 			sprite.FlipH = moveInput.x < 0;
-	// 		}
-	// 	} else { // Apply friction
-	// 		ApplyFriction(delta);
-	// 		if (Mathf.Abs(Velocity.x) < minSpeed)
-	// 			Velocity.x = 0;
-	// 	}
-	// }
-
-	// private void ApplyFriction(float delta) {
-	// 	float friction = IsOnFloor() ? groundFriction : airFriction;
-	// 	Velocity.x = Mathf.Lerp(Velocity.x, 0, Mathf.Clamp(friction * delta, 0, 1));
-	// }
-
 
 	public enum MoveMode {
 		Simple,
