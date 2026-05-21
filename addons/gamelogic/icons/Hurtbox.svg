@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="Hurtbox.svg"
+   inkscape:export-filename="hitbox.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="21.246349"
+     inkscape:cx="15.555614"
+     inkscape:cy="21.227176"
+     inkscape:window-width="2422"
+     inkscape:window-height="1192"
+     inkscape:window-x="2676"
+     inkscape:window-y="753"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showgrid="false" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#3ec75e;stroke:#49be45;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;fill-opacity:0.530303"
+       id="rect1"
+       width="24.804262"
+       height="25.086662"
+       x="3.4829514"
+       y="3.9065535" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#49be45;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="M 15.626214,23.721722 C 10.442491,20.614194 7.23414,18.214498 7.2283784,15.124219 c -0.00576,-3.090279 0.9247702,-4.079691 2.6090165,-4.577592 2.0366901,-0.6020923 3.5152111,0.349671 5.6576531,2.930284 2.213828,-2.328084 4.529293,-3.6449033 6.814315,-2.75939 1.540542,0.597005 2.100538,1.630722 2.140816,4.470357 0.04028,2.839635 -3.216639,5.616808 -8.823965,8.533844 z"
+       id="path3"
+       sodipodi:nodetypes="czacazc" />
+  </g>
+</svg>

@@ -2,8 +2,8 @@
 
 [ext_resource path="res://base/scripts/WalkingEnemy.cs" type="Script" id=1]
 [ext_resource path="res://base/art/animation/BasicEnemyFrames.tres" type="SpriteFrames" id=2]
-[ext_resource path="res://base/scripts/Health.cs" type="Script" id=3]
-[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=4]
+[ext_resource path="res://addons/gamelogic/Health.cs" type="Script" id=3]
+[ext_resource path="res://base/scripts/system/Damage.cs" type="Script" id=4]
 [ext_resource path="res://base/scripts/Head.cs" type="Script" id=5]
 [ext_resource path="res://base/scripts/WalkingEnemyAnimator.cs" type="Script" id=6]
 [ext_resource path="res://base/scenes/effects/enemy/EnemyDieFX.tscn" type="PackedScene" id=7]
@@ -73,7 +73,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[node name="Enemy" type="KinematicBody2D"]
+[node name="Enemy" type="KinematicBody2D" groups=["enemy"]]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource( 1 )

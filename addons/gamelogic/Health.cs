@@ -253,7 +253,7 @@ public partial class Health : Node, IHealth {
 	/// </summary>
 	/// <param name="amount">The amount of damage to take</param>
 	public TakeDamageOutcome TakeDamage(int amount) {
-		GD.Print("dmg");
+		// GD.Print("dmg");
 		if (IsInvincible())
 			return ignoreOnInvincible ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
 		if (!IsAlive())

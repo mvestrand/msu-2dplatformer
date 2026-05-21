@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=1]
-[ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://base/scenes/base/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
 [ext_resource path="res://base/scenes/env/MovingPlatform.tscn" type="PackedScene" id=4]
-[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=5]
-[ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=7]
+[ext_resource path="res://base/scripts/system/Damage.cs" type="Script" id=5]
+[ext_resource path="res://base/scripts/camera/CameraController.cs" type="Script" id=7]
 
 [node name="Level2" type="Node2D"]
 __meta__ = {

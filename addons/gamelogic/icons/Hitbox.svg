@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="hitbox.svg"
+   inkscape:export-filename="hitbox.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="21.246349"
+     inkscape:cx="15.579147"
+     inkscape:cy="21.274243"
+     inkscape:window-width="2150"
+     inkscape:window-height="1192"
+     inkscape:window-x="2204"
+     inkscape:window-y="689"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ff3939;stroke:#ffa1a1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
+       id="rect1"
+       width="24.804262"
+       height="25.086662"
+       x="3.4829514"
+       y="3.9065535" />
+    <path
+       style="fill:#ff3939;fill-opacity:1;stroke:#ffa1a1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="M 7.9543077,24.286526 C 19.485701,9.74285 19.391567,9.60165 19.391567,9.60165 l 4.659624,-1.4590746 -0.706003,4.0948216 -13.7435384,12.9434 z"
+       id="path1" />
+    <path
+       style="fill:#ff3939;fill-opacity:1;stroke:#ffa1a1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="m 9.0184192,18.180265 6.8247018,4.894959 -0.09413,0.04707"
+       id="path2"
+       inkscape:export-filename="Hitbox.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

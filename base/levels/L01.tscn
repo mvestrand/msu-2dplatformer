@@ -1,10 +1,10 @@
 [gd_scene load_steps=21 format=2]
 
-[ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://base/scenes/base/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://base/scenes/env/Checkpoint.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
-[ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=4]
-[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=5]
+[ext_resource path="res://base/scripts/camera/CameraController.cs" type="Script" id=4]
+[ext_resource path="res://base/scripts/system/Damage.cs" type="Script" id=5]
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=6]
 [ext_resource path="res://base/tilesets/details.tres" type="TileSet" id=7]
 [ext_resource path="res://base/tilesets/acid.tres" type="TileSet" id=8]
@@ -33,6 +33,22 @@ __meta__ = {
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 640, -152 )
+moveMode = 0
+curve_accelCurve = null
+adv_walkSpeed = 200.0
+adv_runSpeed = 300.0
+adv_sprintSpeed = 400.0
+adv_sprintAccel = 200.0
+adv_sprintReduce = 100.0
+adv_sprintStartupTime = 1.0
+adv_walkAccel = 1000.0
+adv_runAccel = 1000.0
+adv_walkReduce = 600.0
+adv_runReduce = 600.0
+adv_airMaxSpeedGain = 200.0
+adv_canSprint = true
+adv_changeDirMult = 1.5
+adv_brakeMult = 1.5
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 640, -152 )
@@ -45,10 +61,6 @@ script = ExtResource( 4 )
 targetPath = NodePath("../Player")
 cameraMovementStyle = 6
 maxDistanceFromTarget = 200.0
-dampLambda = 8.15
-fc_useMinSpeed = true
-fc_dampMinSpeed = 50.0
-fc_lookahead = 0.0
 
 [node name="Ypos" type="RayCast2D" parent="Camera2D"]
 enabled = true

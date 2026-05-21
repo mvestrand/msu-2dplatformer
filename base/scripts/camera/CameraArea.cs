@@ -23,7 +23,7 @@ public class CameraArea : Area2D
     }
 
 	public void _on_body_entered(Node other) {
-		GD.Print(this.GetPath().ToString() + ": entered by " + other.GetPath());
+		// GD.Print(this.GetPath().ToString() + ": entered by " + other.GetPath());
 		if (other is Node2D node) {
     		var camController = CameraController.GetCurrent(node.GetViewport());
             if (camController != null && camController.target == node) {
@@ -33,11 +33,11 @@ public class CameraArea : Area2D
 	}
 
 	public void _on_body_exited(Node other) {
-		GD.Print(this.GetPath().ToString() + ": exited by " + other.GetPath());
+		// GD.Print(this.GetPath().ToString() + ": exited by " + other.GetPath());
         if (other is Node2D node) {
     		var camController = CameraController.GetCurrent(node.GetViewport());
             if (camController != null && camController.target == node) {
-				GD.Print("A");
+				// GD.Print("A");
 				camController.RemoveConstraint(this);
 			}
         }

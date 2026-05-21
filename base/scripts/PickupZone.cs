@@ -8,7 +8,7 @@ public class PickupZone : Area2D {
 	}
 
 	public void _on_area_entered(Area2D area) {
-		GD.Print("pickup");
+		// GD.Print("pickup");
 		if (area is Pickup pickup) {
 			pickup.Take(Owner);
 		}

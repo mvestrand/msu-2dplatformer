@@ -1,10 +1,10 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://base/scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://base/scenes/base/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://base/scenes/env/DoorBlockA.tscn" type="PackedScene" id=2]
 [ext_resource path="res://base/audio/music/LevelMusic.wav" type="AudioStream" id=3]
-[ext_resource path="res://base/scripts/CameraController.cs" type="Script" id=4]
-[ext_resource path="res://base/scripts/Damage.cs" type="Script" id=5]
+[ext_resource path="res://base/scripts/camera/CameraController.cs" type="Script" id=4]
+[ext_resource path="res://base/scripts/system/Damage.cs" type="Script" id=5]
 [ext_resource path="res://base/tilesets/basic.tres" type="TileSet" id=6]
 [ext_resource path="res://base/tilesets/details.tres" type="TileSet" id=7]
 [ext_resource path="res://base/tilesets/acid.tres" type="TileSet" id=8]

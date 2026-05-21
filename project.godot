@@ -43,7 +43,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/extendable_inspector/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/extendable_inspector/plugin.cfg", "res://addons/gamelogic/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg" )
 
 [gui]
 
