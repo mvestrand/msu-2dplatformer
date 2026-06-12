@@ -10,7 +10,7 @@ public interface IHealth {
 	int Hp { get; set; }
 	bool IsInvincible();
 	bool IsAlive();
-	TakeDamageOutcome TakeDamage(int amount);
+	TakeDamageOutcome TakeDamage(int amount, bool ignoreInvincible = false);
 	bool ReceiveHealing(int amount, int overheal = 0);
 	void Die();
 }
@@ -252,9 +252,9 @@ public partial class Health : Node, IHealth {
 	/// void (no return)
 	/// </summary>
 	/// <param name="amount">The amount of damage to take</param>
-	public TakeDamageOutcome TakeDamage(int amount) {
-		GD.Print("dmg");
-		if (IsInvincible())
+	public TakeDamageOutcome TakeDamage(int amount, bool ignoreInvincible=false) {
+		// GD.Print("dmg");
+		if (IsInvincible() && !ignoreInvincible)
 			return ignoreOnInvincible ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
 		if (!IsAlive())
 			return ignoreOnDead ? TakeDamageOutcome.Ignored : TakeDamageOutcome.Blocked;
@@ -262,7 +262,6 @@ public partial class Health : Node, IHealth {
 		invincibleTimeLeft = invincibleTimeOnHit;
 		EmitSignal(nameof(Damaged), amount);
 		if (!IsAlive()) {
-			GD.Print("die");
 			Die();
 			return TakeDamageOutcome.Received | TakeDamageOutcome.Killed;
 		}

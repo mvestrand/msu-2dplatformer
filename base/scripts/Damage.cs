@@ -13,6 +13,7 @@ public partial class Damage : Area2D {
 	[Export] public bool dealDamageOnEnter = true;
 	[Export] public bool dealDamageOnStay = false;
 
+	[Export] public bool ignoreInvincible = false;
 	[Signal] public delegate void DamageDealt(Node target, TakeDamageOutcome outcome);
 
 
@@ -34,26 +35,26 @@ public partial class Damage : Area2D {
 		var areas = GetOverlappingAreas();
 		foreach (Area2D area in areas) {
 			if (area.GetNode<IHealth>("Health") is IHealth health) {
-				DealDamage(health);
+				DealDamage(health, ignoreInvincible);
 			}
 		}
 		var bodies = GetOverlappingBodies();
 		foreach (Node body in bodies) {
 			if (body.GetNode<IHealth>("Health") is IHealth health) {
-				DealDamage(health);
+				DealDamage(health, ignoreInvincible);
 			}
 		}
 	}
 
 	public void _on_area_entered(Area2D other) {
 		if (other.GetNode<IHealth>("Health") is IHealth health) {
-			DealDamage(health);
+			DealDamage(health, ignoreInvincible);
 		}
 	}
 
 	public void _on_body_entered(Node other) {
 		if (other.GetNode<IHealth>("Health") is IHealth health) {
-			DealDamage(health);
+			DealDamage(health, ignoreInvincible);
 		}
 	}
 
@@ -67,9 +68,9 @@ public partial class Damage : Area2D {
 	/// void (no return)
 	/// </summary>
 	/// <param name="collisionGameObject">The game object that has been collided with</param>
-	private void DealDamage(IHealth target) {
+	private void DealDamage(IHealth target, bool ignoreInvincible) {
 		if (target.TeamId != teamId) {
-			var outcome = target.TakeDamage(damageAmount);
+			var outcome = target.TakeDamage(damageAmount, ignoreInvincible);
 			if (outcome != TakeDamageOutcome.Ignored) {
 				//GD.Print("dmg dealt");
 				EmitSignal(nameof(DamageDealt), target as Node, outcome);

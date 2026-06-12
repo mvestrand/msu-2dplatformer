@@ -85,17 +85,16 @@ public partial class PlayerController : KinematicBody2D {
 	//[Export] public Health playerHealth;
 
 	// Which way the player is facing right now
+	private Facing2D _facing = Facing2D.Right;
 	public Facing2D Facing {
 		get {
-			if (inputs.Move.x > 0) {
-				return Facing2D.Right;
-			} else if (inputs.Move.x < 0) {
-				return Facing2D.Left;
-			} else {
-				if (sprite != null && sprite.FlipH == true)
-					return Facing2D.Left;
-				return Facing2D.Right;
-			}
+			return _facing;
+		}
+		set {
+			_facing = value;
+			if (sprite != null) {
+				sprite.FlipH = (value == Facing2D.Left);
+			}			
 		}
 	}
 
@@ -149,7 +148,8 @@ public partial class PlayerController : KinematicBody2D {
 		Walk,
 		Jump,
 		Fall,
-		Dead
+		Dead,
+		Stun
 	}
 
 	public PlayerState state = PlayerState.Idle;
@@ -295,9 +295,20 @@ public partial class PlayerController : KinematicBody2D {
 		Advanced
 	}
 
+	private void UpdateFacing(){
+		if (inputs.Move.x > 0) {
+			Facing = Facing2D.Right;
+		} else if (inputs.Move.x < 0) {
+			Facing = Facing2D.Left;
+		}
+	}
+
 	[Export(PropertyHint.Enum,"Simple,Exponential Force,Acceleration Curve,Advanced")] public MoveMode moveMode;
 
 	private void HandleMovementInput(float delta) {
+		if (state == PlayerState.Dead || state == PlayerState.Stun)
+			return;
+		UpdateFacing();
 		switch (moveMode) {
 			case MoveMode.Simple:
 				SimpleMove(delta);
@@ -555,11 +566,7 @@ public partial class PlayerController : KinematicBody2D {
 	/// </summary>
 	private void UpdateSpriteDirection() {
 		if (sprite != null) {
-			if (Facing == Facing2D.Left) {
-				sprite.FlipH = true;
-			} else {
-				sprite.FlipH = false;
-			}
+			sprite.FlipH = (Facing == Facing2D.Left);
 		}
 	}
 

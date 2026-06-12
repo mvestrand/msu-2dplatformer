@@ -77,7 +77,7 @@ public partial class CameraController : Camera2D {
     public void RemoveConstraint(CameraArea area) {
 		var path = area.GetPath();
 		var wasremoved = camConstraints.RemoveAll(x => x.ToString() == path.ToString());
-		GD.Print(wasremoved);
+		// GD.Print(wasremoved);
 	}
 
     public Vector2 ApplyConstraints(Vector2 camPos) {
@@ -326,7 +326,7 @@ public partial class CameraController : Camera2D {
 				var currentFramePlayerOffset = result - GetTargetPosition();
 				var framePlayerShift = currentFramePlayerOffset - lastFramePlayerOffset;
 				lastFramePlayerOffset = currentFramePlayerOffset;
-				GD.Print(framePlayerShift);
+				// GD.Print(framePlayerShift);
 
 				//GetPos().LinearInterpolate(targetPosition, camFollowSpeed * delta);
 
