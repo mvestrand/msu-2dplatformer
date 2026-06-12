@@ -179,9 +179,6 @@ position = Vector2( 912, -32 )
 [node name="Checkpoint3" parent="Env" instance=ExtResource( 2 )]
 position = Vector2( 1472, 32 )
 
-[node name="Checkpoint4" parent="Env" instance=ExtResource( 2 )]
-position = Vector2( -48, 672 )
-
 [node name="Checkpoint5" parent="Env" instance=ExtResource( 2 )]
 position = Vector2( 3120, 992 )
 
@@ -306,7 +303,6 @@ monitorable = false
 script = ExtResource( 5 )
 teamId = -1
 damageAmount = 999
-dealDamageOnStay = true
 ignoreInvincible = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killbox"]

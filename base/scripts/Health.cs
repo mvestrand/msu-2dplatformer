@@ -236,6 +236,7 @@ public partial class Health : Node, IHealth {
 	/// void (no return)
 	/// </summary>
 	public void Respawn() {
+		// GD.Print("Respawn");
 		var parent = GetParent<Node2D>();
 		parent.GlobalPosition = GetRespawnPosition() + respawnOffset;
 		Hp = MaxHp;
