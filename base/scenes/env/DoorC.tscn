@@ -1,0 +1,393 @@
+[gd_scene load_steps=44 format=2]
+
+[ext_resource path="res://base/art/environment/door/DoorNoKeycard.png" type="Texture" id=1]
+[ext_resource path="res://base/art/environment/door/DoorNoKeycard_Frame.png" type="Texture" id=2]
+[ext_resource path="res://base/audio/sfx/env/DoorOpenClose.wav" type="AudioStream" id=3]
+[ext_resource path="res://base/scripts/Door.cs" type="Script" id=4]
+[ext_resource path="res://base/art/environment/door/DoorNoKeycard_FrameFull.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 48, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 144, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 192, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 240, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 1 )
+region = Rect2( 288, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 1 )
+region = Rect2( 336, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 384, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 432, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 1 )
+region = Rect2( 480, 0, 48, 48 )
+
+[sub_resource type="SpriteFrames" id=12]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ), SubResource( 11 ) ],
+"loop": false,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 12, 15.5 )
+
+[sub_resource type="RectangleShape2D" id=14]
+extents = Vector2( 4.5, 16.5 )
+
+[sub_resource type="Animation" id=20]
+resource_name = "closed"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("DoorSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blocker:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=18]
+resource_name = "closing"
+length = 0.777778
+step = 0.0555556
+tracks/0/type = "value"
+tracks/0/path = NodePath("DoorSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.0555556, 0.111111, 0.166667, 0.222222, 0.277778, 0.333333, 0.388889, 0.444444, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blocker:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "audio"
+tracks/2/path = NodePath("AudioStreamPlayer2D")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 3 )
+} ],
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "locked"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("DoorSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blocker:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=21]
+resource_name = "open"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("DoorSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 10 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blocker:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=17]
+resource_name = "opening"
+step = 0.0555556
+tracks/0/type = "value"
+tracks/0/path = NodePath("DoorSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.0555556, 0.111111, 0.166667, 0.222222, 0.277778, 0.333333, 0.388889, 0.444444, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blocker:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.277778 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/2/type = "audio"
+tracks/2/path = NodePath("AudioStreamPlayer2D")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 3 )
+} ],
+"times": PoolRealArray( 0.111111 )
+}
+
+[sub_resource type="RectangleShape2D" id=19]
+extents = Vector2( 20.5, 20 )
+
+[sub_resource type="AnimationNodeAnimation" id=22]
+animation = "closed"
+
+[sub_resource type="AnimationNodeAnimation" id=23]
+animation = "closing"
+
+[sub_resource type="AnimationNodeAnimation" id=35]
+animation = "closed"
+
+[sub_resource type="AnimationNodeAnimation" id=24]
+animation = "locked"
+
+[sub_resource type="AnimationNodeAnimation" id=25]
+animation = "open"
+
+[sub_resource type="AnimationNodeAnimation" id=26]
+animation = "opening"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+advance_condition = "unlocked"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
+advance_condition = "open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=30]
+advance_condition = "closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=31]
+advance_condition = "locked"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=32]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=36]
+advance_condition = "locked"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=37]
+advance_condition = "closed"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=38]
+advance_condition = "open"
+
+[sub_resource type="AnimationNodeStateMachine" id=33]
+states/closed/node = SubResource( 22 )
+states/closed/position = Vector2( 465, 78 )
+states/closing/node = SubResource( 23 )
+states/closing/position = Vector2( 630, 18 )
+states/init/node = SubResource( 35 )
+states/init/position = Vector2( 592, -58 )
+states/locked/node = SubResource( 24 )
+states/locked/position = Vector2( 287, 73 )
+states/open/node = SubResource( 25 )
+states/open/position = Vector2( 806, 73 )
+states/opening/node = SubResource( 26 )
+states/opening/position = Vector2( 630, 128 )
+transitions = [ "locked", "closed", SubResource( 27 ), "closed", "opening", SubResource( 28 ), "opening", "open", SubResource( 29 ), "open", "closing", SubResource( 30 ), "closed", "locked", SubResource( 31 ), "closing", "closed", SubResource( 32 ), "init", "locked", SubResource( 36 ), "init", "closed", SubResource( 37 ), "init", "open", SubResource( 38 ) ]
+start_node = "init"
+graph_offset = Vector2( 76, -79 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=34]
+
+[sub_resource type="RectangleShape2D" id=39]
+extents = Vector2( 44, 44 )
+
+[node name="Door" type="KinematicBody2D"]
+script = ExtResource( 4 )
+_targetState = 2
+
+[node name="DoorSprite" type="AnimatedSprite" parent="."]
+z_index = -2
+frames = SubResource( 12 )
+frame = 1
+centered = false
+offset = Vector2( -30, -48 )
+
+[node name="Head" type="CollisionShape2D" parent="."]
+visible = false
+modulate = Color( 1, 0, 1, 1 )
+position = Vector2( -4, -48.5 )
+z_index = 4
+shape = SubResource( 13 )
+
+[node name="Frame2" type="Sprite" parent="."]
+position = Vector2( 0, -16 )
+z_index = 2
+texture = ExtResource( 5 )
+centered = false
+offset = Vector2( -30, -48 )
+
+[node name="Frame" type="Sprite" parent="."]
+z_index = 2
+texture = ExtResource( 2 )
+centered = false
+offset = Vector2( -30, -48 )
+
+[node name="Blocker" type="CollisionShape2D" parent="."]
+visible = false
+modulate = Color( 1, 0, 1, 1 )
+position = Vector2( 3.5, -16.5 )
+z_index = 4
+shape = SubResource( 14 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/closed = SubResource( 20 )
+anims/closing = SubResource( 18 )
+anims/locked = SubResource( 15 )
+anims/open = SubResource( 21 )
+anims/opening = SubResource( 17 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+visible = false
+volume_db = -80.0
+
+[node name="ActivationZone" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 256
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ActivationZone"]
+modulate = Color( 0.501961, 0.486275, 0.117647, 1 )
+position = Vector2( 3.5, -20 )
+shape = SubResource( 19 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 33 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+process_mode = 0
+parameters/playback = SubResource( 34 )
+parameters/conditions/closed = false
+parameters/conditions/locked = false
+parameters/conditions/open = false
+parameters/conditions/unlocked = false
+
+[node name="HoldZone" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HoldZone"]
+modulate = Color( 0.0313726, 1, 0, 0.490196 )
+position = Vector2( 4, -20 )
+z_index = -6
+shape = SubResource( 39 )
+
+[connection signal="area_entered" from="ActivationZone" to="." method="OnActivationAreaEntered"]
+[connection signal="body_entered" from="ActivationZone" to="." method="OnActivationBodyEnter"]
