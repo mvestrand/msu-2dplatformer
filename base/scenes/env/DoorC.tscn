@@ -234,7 +234,7 @@ tracks/2/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=19]
-extents = Vector2( 20.5, 20 )
+extents = Vector2( 48, 24 )
 
 [sub_resource type="AnimationNodeAnimation" id=22]
 animation = "closed"
@@ -303,7 +303,7 @@ graph_offset = Vector2( 76, -79 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=34]
 
 [sub_resource type="RectangleShape2D" id=39]
-extents = Vector2( 44, 44 )
+extents = Vector2( 64, 44 )
 
 [node name="Door" type="KinematicBody2D"]
 script = ExtResource( 4 )
@@ -363,7 +363,7 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ActivationZone"]
 modulate = Color( 0.501961, 0.486275, 0.117647, 1 )
-position = Vector2( 3.5, -20 )
+position = Vector2( 0, -24 )
 shape = SubResource( 19 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -385,7 +385,7 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HoldZone"]
 modulate = Color( 0.0313726, 1, 0, 0.490196 )
-position = Vector2( 4, -20 )
+position = Vector2( 0, -20 )
 z_index = -6
 shape = SubResource( 39 )
 

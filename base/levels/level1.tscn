@@ -134,6 +134,24 @@ position = Vector2( 128, -64 )
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Enemy" parent="Enemies" instance=ExtResource( 11 )]
+position = Vector2( 352, 192 )
+moveSpeed = 50.0
+shouldSnap = false
+willTurnAroundAtEdge = true
+
+[node name="Enemy4" parent="Enemies" instance=ExtResource( 11 )]
+position = Vector2( 256, 192 )
+moveSpeed = 50.0
+shouldSnap = false
+willTurnAroundAtEdge = true
+
+[node name="Enemy2" parent="Enemies" instance=ExtResource( 11 )]
+position = Vector2( 64, 64 )
+moveSpeed = 50.0
+shouldSnap = false
+willTurnAroundAtEdge = true
+
+[node name="Enemy3" parent="Enemies" instance=ExtResource( 11 )]
 position = Vector2( 80, 0 )
 moveSpeed = 50.0
 shouldSnap = false

@@ -1,7 +1,8 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://base/art/collectables/goal/Goal_Collectable.png" type="Texture" id=1]
 [ext_resource path="res://base/scripts/Goal.cs" type="Script" id=2]
+[ext_resource path="res://base/scenes/LevelClear.tscn" type="PackedScene" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -137,14 +138,14 @@ radius = 14.0
 height = 22.0
 
 [node name="Goal" type="Area2D"]
-collision_layer = 0
+collision_layer = 32
 collision_mask = 512
-monitorable = false
 script = ExtResource( 2 )
+winScreen = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 25 )
-frame = 4
+frame = 1
 playing = true
 offset = Vector2( 0, -4.62831 )
 
